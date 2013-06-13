@@ -1,0 +1,18 @@
+# Calling the dynamic library.
+useDynLib(spliceR)
+
+# All functions exported other than those starting with "."
+exportPattern("^[^\\.]")
+
+exportClasses("SpliceRList")
+exportClasses("CDSSet")
+
+#import(cummeRbund)
+#import(VennDiagram)
+#import(RColorBrewer)
+#import(plyr)
+
+# Overloading functions
+S3method(dim,SpliceRList)
+S3method(length,SpliceRList)
+#S3method(as.matrix,DGEList)

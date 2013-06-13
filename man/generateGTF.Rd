@@ -1,0 +1,50 @@
+\name{generateGTF}
+\alias{generateGTF}
+\title{Generate GTF files for transcript visualization in genome browsers}
+\description{
+Generate GTF files for transcript visualization in genome browsers.
+}
+\usage{
+generateGTF(transcriptData, filters, expressionCutoff=0,scoreMethod="local", filePrefix="spliceR_transcripts", shortDescription="SpliceR Transcripts", longDescription="Transcripts output by SpliceR", useProgressBar=T)
+}
+\arguments{
+  \item{transcriptData}{A \code{SpliceRList} object, created manually from transcript and exon information, or procuced by \code{\link{prepareCuff}} from CuffLinks data, and optionally processed by \code{\link{spliceR}} and/or \code{\link{annotatePTC}}.}
+  \item{filters}{Vector, giving the filters that should be applied - any combinations of 'geneOK', 'expressedGenes', 'sigGenes', 'isoOK', 'expressedIso', 'isoClass' and/or 'sigIso'. Works only for data from cufflinks.}
+  \item{expressionCutoff}{Numeric, giving the expression threshold (often in FPKM) used for the 'expressedGenes' and 'expressedIso' filter. Default value is 0.}
+  \item{scoreMethod}{Character, either of 'local" of 'global', indicating whether to score isoform expression values for GTF color coding based on expression of the isoform in relation to the sample (global) or the gene (local).}
+  \item{filePrefix}{Output file name prefix.}
+  \item{shortDescription}{A short description for the GTF track.}
+  \item{longDescription}{A long description for the GTF track.}
+  \item{useProgressBar}{Boolean, indicating whether to use progressbars. For compatibility. Default = TRUE.}
+
+}
+\details{
+	\code{generateGTF} generates GTF files, one for each sample/condition type, and writes these to disk in the current working directory.
+	If the data was generated using cufflinks and the "source_id" slot of the transcriptData is set to "cufflinks", a number of filters can be applied (see \code{\link{spliceR}} for a full description of filters).
+	Transcripts will be colored on a grayscale according to the \code{scoreMethod} parameter; for "local", the isoform most expressed for a given gene symbol will be darkest; for "global", the color coding will be relative to each transcripts expression across the sample.
+}
+
+\author{Kristoffer Knudsen, Johannes Waage}
+
+\references{
+Anders, S, Huber, W (2010).
+Differential expression analysis for sequence count data
+\emph{Genome Biology} 11, R106.
+}
+
+\examples{
+#Load cufflinks example data
+cuffDB <- prepareCuffExample()
+
+#Generate SpliceRList from cufflinks data
+cuffDB_spliceR <- prepareCuff(cuffDB)
+
+#Reduce dataset size for fast example runtime
+cuffDB_spliceR[[1]] <- cuffDB_spliceR[[1]][1:500]
+
+#Run spliceR
+mySpliceRList <- spliceR(cuffDB_spliceR, compareTo='preTranscript', filters=c('expressedGenes','geneOK', 'isoOK', 'expressedIso', 'isoClass'))
+
+#Export to GTF
+generateGTF(mySpliceRList, filters=c("geneOK", "isoOK", "expressedGenes", "expressedIso"), scoreMethod="local")
+}
