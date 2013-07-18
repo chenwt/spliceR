@@ -219,7 +219,15 @@ generateGTF <- function(transcriptData, filters=NULL,expressionCutoff=0, scoreMe
     myNormalizedScores <- scoresGlobal
     myNormalizedScores[,2:ncol(scoresGlobal)] <- log2(scoresGlobal[,2:ncol(scoresGlobal)] +1) * multiplyFactor
   }
+    
+    ### Qucik fix to correct the error in the Genome browser with score 0 beeing interpred as score 1000
+    correctUCSCscoreProblem <- function(x) {
+      x[which(x == 0)] <- 1 # which will result in the same color coding
+      return( x )
+    }
+    myNormalizedScores <- apply(myNormalizedScores, 2, function(x) correctUCSCscoreProblem(x) )
 
+    
     ### Generate list of GTF files
     gtfList <- lapply(1:length(conditionNames), function(x) NA)
     for(j in 1:length(conditionNames)) {

@@ -12,12 +12,12 @@ topIsoShift(spliceRObject, n=10)
   \item{n}{An integer, giving the number of transcripts to return.} 
 }
 \details{
-This helper function returns the transcripts with the highest delta-percent-spliced-in (dPSI) between samples.
+This helper function returns the transcripts with the highest delta-isoform fraction (dIF) between samples.
 If the data is based on cufflinks (source_id=="cufflinks"), only isoforms flagged significantly changing between samples will be returned.
 }
 
 \value{
-A dataframe, containing a cast of the GRanges rows of the highest scoring transcripts by dPSI.
+A dataframe, containing a cast of the GRanges rows of the highest scoring transcripts by dIF.
 }
 
 \author{Kristoffer Knudsen, Johannes Waage}
@@ -41,6 +41,6 @@ cuffDB_spliceR[[1]] <- cuffDB_spliceR[[1]][1:500]
 #Run spliceR
 mySpliceRList <- spliceR(cuffDB_spliceR, compareTo='preTranscript', filters=c('expressedGenes','geneOK', 'isoOK', 'expressedIso', 'isoClass'))
 
-#Get top dPSI transcripts
+#Get top dIF transcripts
 topIsoShift(mySpliceRList, n=20)
 }

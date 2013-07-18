@@ -1,5 +1,5 @@
 ################ Use the score table to extract the numbers that can be passed to venn diagram functions #####################
-.getIntersectVennData <- function(scoreDataFrame, conditionsToAnalyze , evaluate='nr_transcript', asType='All') {
+.getIntersectVennData <- function(scoreDataFrame, conditionsToAnalyze , evaluate='nr_transcript', asType='All', expressionCutoff=0) {
   # notes:
   # created with inspiration from the venn.diagram() function. 
   # This function have been thoroughly tested and gives the same results as venn.diagram()
@@ -11,7 +11,7 @@
   # This allows me to create highly costumized Venn plots. E.g number of AS evenst / nr_Transcripts
   
   ### Manipulate the score dataframe to the use I need
-  expressed <- scoreDataFrame[,c(3:(length(conditionsToAnalyze)+2))] > 0
+  expressed <- scoreDataFrame[,c(3:(length(conditionsToAnalyze)+2))] > expressionCutoff
   
   ########################### Function of how to ecaluate the numbers ##########################
   if(evaluate == 'nr_transcript') { # function to return number of transcripts
@@ -152,7 +152,7 @@
 }
 
 ### Function to combine it all
-spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='all', colors=NULL, alpha=NULL, reset=FALSE, filters=NULL, expressionCutoff=0) {
+spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='All', colors=NULL, alpha=NULL, reset=FALSE, filters=NULL, expressionCutoff=0) {
   # Check class and GRanges
   if (!class(spliceRobject)[1]=="SpliceRList") stop("spliceRobject argument is not of class SpliceRList")
   if ( class(spliceRobject$"transcript_features") != "GRanges" || class(spliceRobject$"exon_features") != "GRanges" ) stop("spliceRobject must have GRanges objects in slots 'transcript_features' and 'exon_features'") 
@@ -165,7 +165,7 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='all', c
   ) stop("Transcript features GRanges not compatible with spliceR - see documentation for more details")
   
   # Vailidate that the spliceR object have the AS data
-  AScols <- c("spliceR.major","spliceR.PSI1","spliceR.PSI2","spliceR.dPSI","spliceR.ESI","spliceR.MEE","spliceR.MESI","spliceR.ISI","spliceR.A5","spliceR.A3","spliceR.ATSS","spliceR.ATTS","spliceR.analyzed","spliceR.ESI.start","spliceR.ESI.end","spliceR.MEE.start","spliceR.MEE.end","spliceR.MESI.start","spliceR.MESI.end","spliceR.ISI.start","spliceR.ISI.end","spliceR.A5.start","spliceR.A5.end","spliceR.A3.start","spliceR.A3.end","spliceR.ATSS.start","spliceR.ATSS.end","spliceR.ATTS.start","spliceR.ATTS.end")
+  AScols <- c("spliceR.major","spliceR.IF1","spliceR.IF2","spliceR.dIF","spliceR.ESI","spliceR.MEE","spliceR.MESI","spliceR.ISI","spliceR.A5","spliceR.A3","spliceR.ATSS","spliceR.ATTS","spliceR.analyzed","spliceR.ESI.start","spliceR.ESI.end","spliceR.MEE.start","spliceR.MEE.end","spliceR.MESI.start","spliceR.MESI.end","spliceR.ISI.start","spliceR.ISI.end","spliceR.A5.start","spliceR.A5.end","spliceR.A3.start","spliceR.A3.end","spliceR.ATSS.start","spliceR.ATSS.end","spliceR.ATTS.start","spliceR.ATTS.end")
   if( !all( AScols %in% t_colNames)) {
     stop("SpliceRList has not yet been analyzed. Run spliceR() first...")
   }
@@ -182,7 +182,7 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='all', c
     stop('Evaluate must be a text string descriping the plot type. Advailable plots are \'nr_transcript\', \'nr_AS\', \'mean_AS\', \'mean_transcript_exp\' and \'weighted_mean_transcript_exp\'')
   }
   if(class(asType) != "character") {
-    stop('asType must be a text string descriping the type of alternative splicing to be analyzed. Advailable AS types are \'ESI\', \'MEE\', \'MESI\', \'ISI\', \'A5\', \'A3\', \'ATSS\', \'ATTS\' and \'all\' (sum of all the others) ')
+    stop('asType must be a text string descriping the type of alternative splicing to be analyzed. Advailable AS types are \'ESI\', \'MEE\', \'MESI\', \'ISI\', \'A5\', \'A3\', \'ATSS\', \'ATTS\' and \'All\' (sum of All the others) ')
   }
   if(! evaluate %in% c('nr_transcript', 'nr_genes' , 'nr_AS', 'mean_AS_gene', 'mean_AS_transcript', 'mean_transcript_exp', 'mean_gene_exp', 'nr_transcript_pr_gene')) {
     stop('Plot type not recogniced. Advailable plots are \'nr_transcript\',\'nr_genes\' \'nr_transcript_pr_gene\', \'nr_AS\', \'mean_AS_gene\', \'mean_AS_transcript\', \'mean_transcript_exp\',  \'mean_gene_exp\' ')
@@ -191,8 +191,8 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='all', c
     stop('Evaluate can one be ONE of the following \'nr_transcript\',\'nr_genes\', \'nr_transcript_pr_gene\' , \'nr_AS\', \'mean_AS_gene\', \'mean_AS_transcript\', \'mean_transcript_exp\',  \'mean_gene_exp\' ')
   } 
   if( any( !is.null(asType), evaluate=='nr_AS', evaluate=='AS_mass') ) {
-    if(! asType %in% c('ESI','MEE','MESI','ISI','A5', 'A3','ATSS','ATTS','all')) {
-      stop('AS type type not recogniced. Advailable AS types are \'ESI\', \'MEE\', \'MESI\', \'ISI\', \'A5\', \'A3\', \'ATSS\', \'ATTS\' and \'all\' (sum of all the others)')
+    if(! asType %in% c('ESI','MEE','MESI','ISI','A5', 'A3','ATSS','ATTS','All')) {
+      stop('AS type type not recogniced. Advailable AS types are \'ESI\', \'MEE\', \'MESI\', \'ISI\', \'A5\', \'A3\', \'ATSS\', \'ATTS\' and \'All\' (sum of All the others)')
     }
   }
   if(!length(conditionsToAnalyze) %in% 2:5) {
@@ -256,22 +256,22 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='all', c
     isoformsToAnalyzeIndex <- 1:nrow(transcript_features)
     ##################################### Apply the chosen filters #####################################
     # Optional filters 
-    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- .filterOKGenes(        list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedGenes( list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
-    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- .filterSigGenes(       list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- .filterOKIso(          list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedIso(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
-    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- .filterIsoClassCode(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- .filterSigIso(         list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }  
+    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterOKGenes(        list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterExpressedGenes( list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
+    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterSigGenes(       list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterOKIso(          list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterExpressedIso(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
+    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterIsoClassCode(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterSigIso(         list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }  
     if('singleExon'     %in% filters) { 
       exonDF <- GenomicRanges::as.data.frame(spliceRobject[["exon_features"]])
       exonDF <- data.frame(lapply(exonDF, function(x) {if (class(x)=="factor") as.character(x) else (x)}), stringsAsFactors=FALSE) # remove factors
       colnames(exonDF) <- c(colnames(exonDF)[1:5], substr(colnames(exonDF)[6:ncol(exonDF)],9,nchar(colnames(exonDF)[6:ncol(exonDF)])))
       
-      isoformsToAnalyzeIndex <- .filterSingleExonIsoAll( list("transcript_features"=transcript_features, "exon_features"=exonDF), isoformsToAnalyzeIndex) 
+      isoformsToAnalyzeIndex <- spliceR:::.filterSingleExonIsoAll( list("transcript_features"=transcript_features, "exon_features"=exonDF), isoformsToAnalyzeIndex) 
       rm(exonDF)
     }
-    if('PTC'            %in% filters) { isoformsToAnalyzeIndex <- .filterPTC(               list('transcript_features'=transcript_features), isoformsToAnalyzeIndex) }
+    if('PTC'            %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterPTC(               list('transcript_features'=transcript_features), isoformsToAnalyzeIndex) }
     
     analyzedIsoformData <- transcript_features[isoformsToAnalyzeIndex,]
     
@@ -316,37 +316,37 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='all', c
   mainText <- 'spliceR venn diagram'
   
   if(evaluate == 'nr_transcript') {
-    overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType)
+    overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
     subText <- 'Number of transcipts'
   } else if(evaluate == 'nr_genes' ) {
-    overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType)
+    overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
     subText <- 'Number of genes'
   } else if(evaluate == 'nr_transcript_pr_gene' ) {
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType)
-    nrGenes <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType)
+    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
+    nrGenes <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(nrTranscripts/nrGenes,digits=2)
     subText <- 'Number of transcript per gene'
   } else if(evaluate == 'nr_AS') {
-    overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType)
+    overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
     subText <- paste('Number of',asType,'AS events',sep=' ')
   } else if(evaluate == 'mean_AS_gene') {
-    nrAS <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType)
+    nrAS <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(nrAS/nrTranscripts,digits=2)
     subText <- paste('Average number of',asType,'AS events per gene',sep=' ')
   } else if(evaluate == 'mean_AS_transcript') {
-    nrAS <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType)
+    nrAS <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(nrAS/nrTranscripts,digits=2)
     subText <- paste('Average number of',asType,'AS events per transcript',sep=' ')
   } else if(evaluate == 'mean_transcript_exp') {
-    expressionMass <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='exp_mass', asType=asType)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType)
+    expressionMass <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='exp_mass', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(expressionMass/nrTranscripts,digits=2)
     subText <- 'Mean transcript expression'
   } else if(evaluate == 'mean_gene_exp') {
-    expressionMass <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='exp_mass', asType=asType)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType)
+    expressionMass <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='exp_mass', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(expressionMass/nrTranscripts,digits=2)
     subText <- 'Mean gene expression'
   }

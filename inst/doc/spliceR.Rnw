@@ -193,7 +193,7 @@ mySpliceRList <- spliceR(
 @
 
 Typical runtime for < 100.000 transcripts for 4 samples on a contemporary workstation should be in the vicinity of 1.5-2 hours. After \texttt{spliceR()} is done, the \texttt{transcriptFeatures} \texttt{GRanges} is populated with several additional columns.
-These include columns for percent spliced in values (PSI) and delta PSI. Each splicing class gets a column, indicating how many events of a given class was detected for the respective transcripts. Finally, the "analyzed" columned indicates whether this transcript was carried through filtering.
+These include columns for isoform fraction values (IF) and delta IF. Each splicing class gets a column, indicating how many events of a given class was detected for the respective transcripts. Finally, the "analyzed" columned indicates whether this transcript was carried through filtering.
 
 \section{PTC-annotation}
 

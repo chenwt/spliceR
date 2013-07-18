@@ -191,7 +191,7 @@
 
 ### Function to evaluate counter of non-overlapping exons
 .evaluateCounter <- function(count, asTypes, coordinats) {
-  if( count == 1) {
+  if( count == 1) { # single skipping
     asTypes$ESI <- asTypes$ESI + 1
     
     if(is.na(asTypes$ESI.start)) {
@@ -202,17 +202,32 @@
       asTypes$ESI.end   <- paste(asTypes$ESI.end,   coordinats$end,   sep=';')
     }
     
-  } else {
-    asTypes$MESI <- asTypes$MESI + 1
-    for(i in 1:nrow(coordinats)) {
-      if(is.na(asTypes$MESI.start)) {
-        asTypes$MESI.start <- paste( coordinats$start[i] )
-        asTypes$MESI.end   <- paste( coordinats$end[i] )
-      } else {
-        asTypes$MESI.start <- paste(asTypes$MESI.start, coordinats$start[i], sep=';')
-        asTypes$MESI.end   <- paste(asTypes$MESI.end,   coordinats$end[i],   sep=';')
+  } else { # multiple skipping
+    if(asTypes$MESI > 0) { # if a MESI have already been annotated, add a ',' to destinguish them from each other
+      for(i in 1:nrow(coordinats)) {
+        if(i == 1) { # if a MESI have already been anotated
+          asTypes$MESI.start <- paste(asTypes$MESI.start, coordinats$start[i], sep=',') # start with a ','
+          asTypes$MESI.end   <- paste(asTypes$MESI.end,   coordinats$end[i],   sep=',') # start with a ','
+        } else {
+          asTypes$MESI.start <- paste(asTypes$MESI.start, coordinats$start[i], sep=';')
+          asTypes$MESI.end   <- paste(asTypes$MESI.end,   coordinats$end[i],   sep=';')
+        }
+      }
+      
+    } else { # if NO MESI have been anotated before
+      for(i in 1:nrow(coordinats)) {
+        if(is.na(asTypes$MESI.start)) {
+          asTypes$MESI.start <- paste( coordinats$start[i] )
+          asTypes$MESI.end   <- paste( coordinats$end[i] )
+        } else {
+          asTypes$MESI.start <- paste(asTypes$MESI.start, coordinats$start[i], sep=';')
+          asTypes$MESI.end   <- paste(asTypes$MESI.end,   coordinats$end[i],   sep=';')
+        }
       }
     }
+    
+    # add 1 to the MESI counter
+    asTypes$MESI <- asTypes$MESI + 1
     
   }
   
@@ -688,14 +703,24 @@
       transcriptWithOUTintronRetension <- (1:2)[!1:2 %in% transcriptWithIntronRetension]
       
       for(i in 1:( max(sapply(numberOfReplicatesList, length )) -1) ) {
-        
-        if(is.na(asTypes$ISI.start)) {
-          asTypes$ISI.start <- paste( transcriptList[[transcriptWithOUTintronRetension]]$end[ numberOfReplicatesList[[transcriptWithIntronRetension]][i]] )
-          asTypes$ISI.end   <- paste( transcriptList[[transcriptWithOUTintronRetension]]$start[ numberOfReplicatesList[[transcriptWithIntronRetension]][i] +1 ] )
-        } else {
-          asTypes$ISI.start <- paste(asTypes$ISI.start, transcriptList[[transcriptWithOUTintronRetension]]$end[ numberOfReplicatesList[[transcriptWithIntronRetension]][i]], sep=';')
-          asTypes$ISI.end   <- paste(asTypes$ISI.end,   transcriptList[[transcriptWithOUTintronRetension]]$start[ numberOfReplicatesList[[transcriptWithIntronRetension]][i] +1 ],   sep=';')
+        if(asTypes$ISI > 1) { # if a ISI have already been anotated for this transcript (the counter is above where it is > 1 (and not > 0))
+          if(i == 1) { # then for the first entry use a ','
+            asTypes$ISI.start <- paste(asTypes$ISI.start, transcriptList[[transcriptWithOUTintronRetension]]$end[ numberOfReplicatesList[[transcriptWithIntronRetension]][i]], sep=',')
+            asTypes$ISI.end   <- paste(asTypes$ISI.end,   transcriptList[[transcriptWithOUTintronRetension]]$start[ numberOfReplicatesList[[transcriptWithIntronRetension]][i] +1 ],   sep=',')
+          } else { # for the rest use ';'
+            asTypes$ISI.start <- paste(asTypes$ISI.start, transcriptList[[transcriptWithOUTintronRetension]]$end[ numberOfReplicatesList[[transcriptWithIntronRetension]][i]], sep=';')
+            asTypes$ISI.end   <- paste(asTypes$ISI.end,   transcriptList[[transcriptWithOUTintronRetension]]$start[ numberOfReplicatesList[[transcriptWithIntronRetension]][i] +1 ],   sep=';')
+          }
+        } else { # if a ISI have not been anotated for this transcript
+          if(is.na(asTypes$ISI.start)) {
+            asTypes$ISI.start <- paste( transcriptList[[transcriptWithOUTintronRetension]]$end[ numberOfReplicatesList[[transcriptWithIntronRetension]][i]] )
+            asTypes$ISI.end   <- paste( transcriptList[[transcriptWithOUTintronRetension]]$start[ numberOfReplicatesList[[transcriptWithIntronRetension]][i] +1 ] )
+          } else {
+            asTypes$ISI.start <- paste(asTypes$ISI.start, transcriptList[[transcriptWithOUTintronRetension]]$end[ numberOfReplicatesList[[transcriptWithIntronRetension]][i]], sep=';')
+            asTypes$ISI.end   <- paste(asTypes$ISI.end,   transcriptList[[transcriptWithOUTintronRetension]]$start[ numberOfReplicatesList[[transcriptWithIntronRetension]][i] +1 ],   sep=';')
+          }
         }
+        
       }
       
       # test for 5' overhang in the intron retension

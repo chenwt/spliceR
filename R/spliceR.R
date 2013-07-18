@@ -52,9 +52,9 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	# Create placeholder rows
 	transcriptData$"transcript_features"$"spliceR.major"=NA
 	
-	transcriptData$"transcript_features"$"spliceR.PSI1"=NA
-	transcriptData$"transcript_features"$"spliceR.PSI2"=NA
-	transcriptData$"transcript_features"$"spliceR.dPSI"=NA
+	transcriptData$"transcript_features"$"spliceR.IF1"=NA
+	transcriptData$"transcript_features"$"spliceR.IF2"=NA
+	transcriptData$"transcript_features"$"spliceR.dIF"=NA
 	
 	transcriptData$"transcript_features"$"spliceR.ESI"=NA
 	transcriptData$"transcript_features"$"spliceR.MEE"=NA
@@ -190,8 +190,6 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
       ### see whether the minimum requirements for MEE are there (to speed up the calculations)
 	    areMEEposible <- all( length(which(sapply(exonList, nrow) >= 3)) >= 2 , nrow(exonInfoPreTranscript) >=4)
       
-
-
       
       if(major) { ## Check if major is toggeled
 	    # ###Determine which isoform is major
@@ -232,7 +230,7 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	        
 	        # Loop over genes and extract info of which exons are expressed in which transcripts
 	  	    for(i in 1:length(uniqueIsoformsIndex)) {
-	  	      ## extract exon features of minor isoform
+            ## extract exon features of minor isoform
 	  	      isoformExonInfo <-  exonList[[ uniqIsoformNames[i] ]]
 	          
 	          overlapIdenticalList <- .findOverlap(exonInfoPreTranscript,isoformExonInfo)
@@ -260,7 +258,7 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	            expressedIn2 <- which(as.logical(exonIncludedTF[i+1,])) # get the transcript index
 	            if( expressedIn1 != expressedIn2 ) {
 	              if(i != startExons[expressedIn1] & i != endExons[expressedIn1] & i+1 != startExons[expressedIn2] & i+1 != endExons[expressedIn2]) {
-	                # annotate the number of MEE
+                  # annotate the number of MEE
 	                MEEindexes1 <- which(isoformsToAnalyze$isoform_id == isoformsToAnalyze$isoform_id[uniqueIsoformsIndex[expressedIn1]])
 	                MEEindexes2 <- which(isoformsToAnalyze$isoform_id == isoformsToAnalyze$isoform_id[uniqueIsoformsIndex[expressedIn2]])
 	                isoformsToAnalyze$MEE[c(MEEindexes1,MEEindexes2)] <- isoformsToAnalyze$MEE[c(MEEindexes1,MEEindexes2)]  + 1
@@ -346,7 +344,7 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	      }     
 	    } # end of loop over isoforms
       
-      ### Anotate PSI and dPSI values
+      ### Anotate IF and dIF values
 	    # get total expression of all the isoforms to analyze for EACH condition (is different than the expression of the gene - because i exclude some transcripts)
 	    totalIsoformExpression <- NULL
 	    for(conditionName in conditionNames) {
@@ -358,9 +356,9 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	    }
 	    
 	    # Extract info about which collums are the ones that contain the wanted info
-	    sampleCol1 <- which(colnames(transcriptData[["transcript_features"]])=="sample_1")	#spliceR.sample_1
+	    sampleCol1 <- which(colnames(transcriptData[["transcript_features"]])=="sample_1")   	#spliceR.sample_1
 	    isoValCol1 <- which(colnames(transcriptData[["transcript_features"]])=="iso_value_1")	#spliceR.iso_value_1
-	    PSIvalCol1 <- which(colnames(transcriptData[["transcript_features"]])=="PSI1")	#spliceR.PSI1
+	    IFvalCol1  <- which(colnames(transcriptData[["transcript_features"]])=="IF1")        	#spliceR.IF1
 	    
 	    # print(cat(colnames(transcriptData[["transcript_features"]])))
 	    # print(cat(isoValCol1))
@@ -368,12 +366,12 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 
 
 	    # if(dataOrigin == 'cufflinks') { # in this way we can controle the different indexes for different input files
-	    #   # sampleCol1 <- 7	#spliceR.sample_1
-	    #   # isoValCol1 <- 24	#spliceR.iso_value_1
-	    #   # PSIvalCol1 <- 31	#spliceR.PSI1
-	    #   sampleCol1 <- which(colnames(transcriptData[["transcript_features"]]))=="spliceR.sample_1")	#spliceR.sample_1
+	    #   # sampleCol1 <- 7                                                                             	#spliceR.sample_1
+	    #   # isoValCol1 <- 24                                                                            	#spliceR.iso_value_1
+	    #   # PSIvalCol1 <- 31                                                                            	#spliceR.PSI1
+	    #   sampleCol1 <- which(colnames(transcriptData[["transcript_features"]]))=="spliceR.sample_1")   	#spliceR.sample_1
 	    #   isoValCol1 <- which(colnames(transcriptData[["transcript_features"]]))=="spliceR.iso_value_1")	#spliceR.iso_value_1
-	    #   PSIvalCol1 <- which(colnames(transcriptData[["transcript_features"]]))=="spliceR.PSI1")	#spliceR.PSI1
+	    #   PSIvalCol1 <- which(colnames(transcriptData[["transcript_features"]]))=="spliceR.PSI1")       	#spliceR.PSI1
 	    # }
 	    # if(dataOrigin == 'granges') { # in this way we can controle the different indexes for different input files
 	    #   sampleCol1 <- NULL
@@ -381,32 +379,32 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	    #   PSIvalCol1 <- NULL
 	    # }
 	    
-	    # loop over all indexes to analyze to calculte PSI values
+	    # loop over all indexes to analyze to calculte IF values
 	    for(isoformIndex in 1:nrow(isoformsToAnalyze)) {
 	      # if isoform is major annotate it
 	      if(major) {
 	        if(isoformIndex %in% maxIsoformIndex) { next }
 	      } 
         
-        for(i in 0:1) { #loop over indexes so i can calculate PSI for both the sample_1 and sample_2 collumns
+        for(i in 0:1) { #loop over indexes so i can calculate IF for both the sample_1 and sample_2 collumns
 	        # Get condition name
 	        myCondition <- isoformsToAnalyze[isoformIndex,(sampleCol1+i)] # get condition name (which is in collumn 2 and 3)
 	          # get total expression of isoforms within that gene
 	        totalExpValue <- totalIsoformExpression[conditionNames %in% myCondition]
 	        if(totalExpValue == 0) {
-	          isoformsToAnalyze[isoformIndex,(PSIvalCol1+i)] <- 0 # else I would devide by zero
+	          isoformsToAnalyze[isoformIndex,(IFvalCol1+i)] <- 0 # else I would devide by zero
 	        } else {
-	          # calculate PSI value
-	          isoformsToAnalyze[isoformIndex,(PSIvalCol1+i)] <- round( isoformsToAnalyze[isoformIndex,(isoValCol1+i)] / totalExpValue * 100 ,digits = 2)
+	          # calculate IF value
+	          isoformsToAnalyze[isoformIndex,(IFvalCol1+i)] <- round( isoformsToAnalyze[isoformIndex,(isoValCol1+i)] / totalExpValue * 100 ,digits = 2)
 	        }
 	      }
 	    }
-	    # annotate dPSI
-	    isoformsToAnalyze$dPSI <- isoformsToAnalyze$PSI2 - isoformsToAnalyze$PSI1
+	    # annotate dIF
+	    isoformsToAnalyze$dIF <- isoformsToAnalyze$IF2 - isoformsToAnalyze$IF1
 	    
       # write local data to global dataframe (so everything is stored and can be returned)    
 	    # this is faster than replacing the full dataset and also faster (and more readiable) than using c(26:40)
-	    transcriptData[["transcript_features"]][isoformsToAnalyzeWithinGeneIndexGlobal,c("major","PSI1","PSI2","dPSI","ESI","MEE","MESI","ISI","A5","A3","ATSS","ATTS","analyzed",'ESI.start', 'ESI.end','MESI.start','MESI.end','ISI.start','ISI.end','A5.start','A5.end','A3.start','A3.end','ATSS.start','ATSS.end','ATTS.start','ATTS.end')] = isoformsToAnalyze[,c("major","PSI1","PSI2","dPSI","ESI","MEE","MESI","ISI","A5","A3","ATSS","ATTS","analyzed",'ESI.start', 'ESI.end','MESI.start','MESI.end','ISI.start','ISI.end','A5.start','A5.end','A3.start','A3.end','ATSS.start','ATSS.end','ATTS.start','ATTS.end')] #slow index - THE RATE LIMITING STEP
+	    transcriptData[["transcript_features"]][isoformsToAnalyzeWithinGeneIndexGlobal,c("major","IF1","IF2","dIF","ESI","MEE","MESI","ISI","A5","A3","ATSS","ATTS","analyzed",'ESI.start', 'ESI.end','MEE.start','MEE.end','MESI.start','MESI.end','ISI.start','ISI.end','A5.start','A5.end','A3.start','A3.end','ATSS.start','ATSS.end','ATTS.start','ATTS.end')] = isoformsToAnalyze[,c("major","IF1","IF2","dIF","ESI","MEE","MESI","ISI","A5","A3","ATSS","ATTS","analyzed",'ESI.start', 'ESI.end','MEE.start','MEE.end','MESI.start','MESI.end','ISI.start','ISI.end','A5.start','A5.end','A3.start','A3.end','ATSS.start','ATSS.end','ATTS.start','ATTS.end')] #slow index - THE RATE LIMITING STEP
 	    #paste(difftime(Sys.time(),t10,u='sec'),'Time to write to global file',sep=' ')
       
       ### Update progressbar

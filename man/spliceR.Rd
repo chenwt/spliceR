@@ -30,9 +30,9 @@ spliceR(transcriptData, compareTo, filters, expressionCutoff=0, useProgressBar=T
 \value{
 A \code{SpliceRList}, identical to input SpliceRList transcriptData, with the \code{transcript_features} slot containing the following additional columns:
 	\item{spliceR.major}{yes/no, indicating if this isoform is the major isoform expressed of the relevant gene for the reference sample.}
-	\item{spliceR.PSI1}{Percent Spliced In of this isoform vs. the major isoform for sample 1}
-	\item{spliceR.PSI2}{Precent Spliced In of this isoform vs. the major isoform for sample 2}
-	\item{spliceR.dPSI}{Delta PSI (sample 2-sample 1)}
+	\item{spliceR.IF1}{Isoform Fraction of total gene expression for sample 1}
+	\item{spliceR.IF2}{Isoform Fraction of total gene expression for sample 2}
+	\item{spliceR.dIF}{Delta IF (sample 2-sample 1)}
 	\item{spliceR.ESI}{Number of exon skipping/inclusion events for this isoform}
 	\item{spliceR.MEE}{Number of mutually exclusive exon events for this isoform}
 	\item{spliceR.MESI}{Number of mutliple exon skipping/inclusion events for this isoform}

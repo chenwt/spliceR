@@ -34,7 +34,7 @@ topIsoShift <- function(spliceRObject, n=10) {
 
 	transcriptData                <- GenomicRanges::as.data.frame( spliceRObject[['transcript_features']] )
 	analyzedTranscriptData        <- transcriptData[ which(transcriptData$spliceR.analyzed == 'yes') ,]
-	analyzedTranscriptDataSorted  <- analyzedTranscriptData[ sort.list( abs(analyzedTranscriptData$spliceR.dPSI), decreasing=TRUE),]
+	analyzedTranscriptDataSorted  <- analyzedTranscriptData[ sort.list( abs(analyzedTranscriptData$spliceR.dIF), decreasing=TRUE),]
 	
 	if (spliceRObject[["source_id"]]=="cufflinks") {
 	    analyzedTranscriptDataSorted  <- subset(analyzedTranscriptDataSorted, spliceR.iso_significant=="yes")
@@ -110,6 +110,8 @@ preSpliceRFilter <- function(transcriptData, filters, expressionCutoff=0) {
 
     # remove unwanted in the exon GRange as well
     transcriptData$exon_features <- transcriptData$exon_features[which(transcriptData$exon_features$spliceR.isoform_id %in% transcriptData$transcript_features$spliceR.isoform_id)]
+
+    transcriptData$filter_params <- filters
 
     # return object
     return(transcriptData)
