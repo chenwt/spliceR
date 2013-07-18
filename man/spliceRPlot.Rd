@@ -3,12 +3,12 @@
 \title{Plot stuff}
 \description{Plot venn diagrams of alternative splicing events vs. samples.}
 \usage{
-spliceRPlot(spliceRobject, evaluate="nr_transcript", asType="all",colors=NULL, alpha=NULL, reset=FALSE, filters=NULL, expressionCutoff=0)
+spliceRPlot(spliceRobject, evaluate="nr_transcript", asType="All",colors=NULL, alpha=NULL, reset=FALSE, filters=NULL, expressionCutoff=0)
 }
 \arguments{
   \item{spliceRobject}{A \code{SpliceRList} object, processed and returned by \code{\link{spliceR}}.}
   \item{evaluate}{A character, giving the evaulation criteria (see details).}
-  \item{asType}{The alternative splicing type to visualize, either 'ESI','MEE','MESI','ISI','A5', 'A3','ATSS','ATTS' or 'all'. See \code{\link{spliceR}} for a full description of alternative splicing types.}
+  \item{asType}{The alternative splicing type to visualize, either 'ESI','MEE','MESI','ISI','A5', 'A3','ATSS','ATTS' or 'All'. See \code{\link{spliceR}} for a full description of alternative splicing types.}
   \item{colors}{Character, giving plot colors for each condition. Must be same length as number of conditions. If NULL, colors from the ColorBrewer "Dark2" pallette is used.}
   \item{alpha}{A numeric between 0 and 1, giving the transparency of the plot. If NULL, the alpha will be set optimally depending on number of samples.}
   \item{reset}{A boolean, indicating whether to reinitialize the \code{SpliceRList} object for faster replotting.}
