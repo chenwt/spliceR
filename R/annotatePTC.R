@@ -181,13 +181,13 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50, filte
 		}	#End of cds positive
 	}	#End of iteration
 
-	message("\nProcessed ", sum(cdsPos[duplicated(transcriptData[[1]]$"spliceR.isoform_id")]!=-1, na.rm=T) , " putative ORFs...", sep="")
+	message("\nProcessed ", sum(cdsPos[!duplicated(transcriptData[[1]]$"spliceR.isoform_id")]!=-1, na.rm=T) , " putative ORFs...", sep="")
 
-	transcriptData[["transcript_features"]]$"spliceR.cds_pos"	 		<-cdsPos		
-	transcriptData[["transcript_features"]]$"spliceR.stop_pos" 			<-stopPos		
-	transcriptData[["transcript_features"]]$"spliceR.stop_distance"		<-stopDistance	
-	transcriptData[["transcript_features"]]$"spliceR.junction_index" 	<-junctionIndex
-	transcriptData[["transcript_features"]]$"spliceR.PTC"				<-(stopDistance>=PTCDistance) & junctionIndex != 0
+	transcriptData[["transcript_features"]]$"spliceR.cds_pos"       		              	<-cdsPos 		
+	transcriptData[["transcript_features"]]$"spliceR.stop_pos"      		              	<-stopPos		
+	transcriptData[["transcript_features"]]$"spliceR.stop_distance" 		<-stopDistance	
+	transcriptData[["transcript_features"]]$"spliceR.junction_index"	<-junctionIndex
+	transcriptData[["transcript_features"]]$"spliceR.PTC"           				<-(stopDistance>=PTCDistance) & junctionIndex != 0
 
 	return(transcriptData)
 }
