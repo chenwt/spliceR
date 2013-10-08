@@ -107,7 +107,7 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50, filte
 					break
 				}
 			}
-		} else if(currentExonRows[1,"strand"] == "+")
+		} else if(currentExonRows[1,"strand"] == "-")
 		{
 			qualifiedCDS <- cds[cds$"chrom"==currentExonRows[1, "seqnames"]&cds$"strand"==currentExonRows[1, "strand"] & cds$"cdsEnd">= min(currentExonRows$"start"-1) & cds$"cdsEnd"<= max(currentExonRows$"end"+1),]
 			if (!is.null(qualifiedCDS))

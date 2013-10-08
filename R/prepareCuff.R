@@ -17,12 +17,17 @@ prepareCuff <- function(cuffDB)
 	isoformDiffanalysis 			<- data.frame(diffData(cuffIsoforms),stringsAsFactors=F)[,-8]
 	colnames(isoformDiffanalysis) 	<- c('isoform_id','sample_1', 'sample_2' ,unlist(lapply(colnames(isoformDiffanalysis[,-1:-3]), function(x) paste("iso_",x,sep="")))) # add gene to the colnames so they can be destinquished from the gene diff data
 	isoformData 					<- data.frame(merge(isoformData, isoformDiffanalysis, by=c('isoform_id','sample_1','sample_2')), stringsAsFactors=F) #CORR JW
-	
+	 
 	message("Reading cuffDB, exons...")
 	# Get exon info
 	isoformFeatureQuery		<-paste("SELECT y.* FROM features y JOIN genes x on y.gene_id = x.gene_id ",sep="")
 	isoformFeatures			<-data.frame(dbGetQuery(cuffDB@DB,isoformFeatureQuery),stringsAsFactors=F)
 	
+  
+  	# Fix to correct for Cufflinks annotation problem where cufflinks assignes transcripts from several annotated genes to 1 cuffgene
+	isoformData$gene_id     <- paste(isoformData$gene_id,     isoformData$gene_short_name, sep='.')
+	isoformFeatures$gene_id <- paste(isoformFeatures$gene_id, isoformFeatures$gene_name,   sep='.')
+  
 	# Extract conditions info from cufflinks
 	conditions <- samples(genes(cuffDB))
 

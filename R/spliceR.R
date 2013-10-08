@@ -110,7 +110,7 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	message("Filtering...")
 
   
-  	### Filter transcript info
+  ### Filter transcript info
 	isoformsToAnalyzeIndex <- 1:nrow(transcriptData[["transcript_features"]])
 	
 	# Optional filters 
@@ -159,7 +159,7 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	
 	# Create statusbar (this statement also automaticlly prints the statusbar)
 	if (useProgressBar) pb <- txtProgressBar(min = 1, max = numberOfGenes, style = 3)
-	  
+	
 	for(geneIndex in 1:numberOfGenes) {
 	    #################### Extract indexs of isoforms belonging to the genes ####################
 	    ### extract information about the gene
@@ -379,28 +379,28 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 	    #   PSIvalCol1 <- NULL
 	    # }
 	    
-	    # loop over all indexes to analyze to calculte IF values
-	    for(isoformIndex in 1:nrow(isoformsToAnalyze)) {
-	      # if isoform is major annotate it
-	      if(major) {
-	        if(isoformIndex %in% maxIsoformIndex) { next }
-	      } 
-        
-        for(i in 0:1) { #loop over indexes so i can calculate IF for both the sample_1 and sample_2 collumns
-	        # Get condition name
-	        myCondition <- isoformsToAnalyze[isoformIndex,(sampleCol1+i)] # get condition name (which is in collumn 2 and 3)
-	          # get total expression of isoforms within that gene
-	        totalExpValue <- totalIsoformExpression[conditionNames %in% myCondition]
-	        if(totalExpValue == 0) {
-	          isoformsToAnalyze[isoformIndex,(IFvalCol1+i)] <- 0 # else I would devide by zero
-	        } else {
-	          # calculate IF value
-	          isoformsToAnalyze[isoformIndex,(IFvalCol1+i)] <- round( isoformsToAnalyze[isoformIndex,(isoValCol1+i)] / totalExpValue * 100 ,digits = 2)
-	        }
-	      }
-	    }
-	    # annotate dIF
-	    isoformsToAnalyze$dIF <- isoformsToAnalyze$IF2 - isoformsToAnalyze$IF1
+# 	    # loop over all indexes to analyze to calculte IF values
+# 	    for(isoformIndex in 1:nrow(isoformsToAnalyze)) {
+# 	      # if isoform is major annotate it
+# 	      if(major) {
+# 	        if(isoformIndex %in% maxIsoformIndex) { next }
+# 	      } 
+#         
+#         for(i in 0:1) { #loop over indexes so i can calculate IF for both the sample_1 and sample_2 collumns
+# 	        # Get condition name
+# 	        myCondition <- isoformsToAnalyze[isoformIndex,(sampleCol1+i)] # get condition name (which is in collumn 2 and 3)
+# 	          # get total expression of isoforms within that gene
+# 	        totalExpValue <- totalIsoformExpression[conditionNames %in% myCondition]
+# 	        if(totalExpValue == 0) {
+# 	          isoformsToAnalyze[isoformIndex,(IFvalCol1+i)] <- 0 # else I would devide by zero
+# 	        } else {
+# 	          # calculate IF value
+# 	          isoformsToAnalyze[isoformIndex,(IFvalCol1+i)] <- round( isoformsToAnalyze[isoformIndex,(isoValCol1+i)] / totalExpValue * 100 ,digits = 2)
+# 	        }
+# 	      }
+# 	    }
+# 	    # annotate dIF
+# 	    isoformsToAnalyze$dIF <- isoformsToAnalyze$IF2 - isoformsToAnalyze$IF1
 	    
       # write local data to global dataframe (so everything is stored and can be returned)    
 	    # this is faster than replacing the full dataset and also faster (and more readiable) than using c(26:40)
@@ -410,6 +410,11 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
       ### Update progressbar
 	    if (useProgressBar) setTxtProgressBar(pb, geneIndex)
 	} # belongs to loop over genes
+  
+  ### Annotate IF values
+	transcriptData$transcript_features$IF1[isoformsToAnalyzeIndex] <- round(transcriptData$transcript_features$iso_value_1[isoformsToAnalyzeIndex] / transcriptData$transcript_features$gene_value_1[isoformsToAnalyzeIndex] * 100, digits=4)
+	transcriptData$transcript_features$IF2[isoformsToAnalyzeIndex] <- round(transcriptData$transcript_features$iso_value_2[isoformsToAnalyzeIndex] / transcriptData$transcript_features$gene_value_2[isoformsToAnalyzeIndex] * 100, digits=4)
+	transcriptData$transcript_features$dIF[isoformsToAnalyzeIndex] <- transcriptData$transcript_features$IF2[isoformsToAnalyzeIndex] - transcriptData$transcript_features$IF1[isoformsToAnalyzeIndex]
 
 	#close progress bar
 	if (useProgressBar) close(pb)
