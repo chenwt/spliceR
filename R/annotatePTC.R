@@ -17,7 +17,7 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50, filte
 
 	#Get only + and minus strand
 	#transcriptData[["exon_features"]] <- transcriptData[["exon_features"]][match(strand(transcriptData[["exon_features"]]),c("+", "-"), nomatch=0)>0]
-	transcriptData[["exon_features"]] <- transcriptData[["exon_features"]][match(as.vector(strand(transcriptData[["exon_features"]])),c("+", "-"), nomatch = 0) > 0]
+	transcriptData[["exon_features"]] <- transcriptData[["exon_features"]][match(as.vector(GenomicRanges::strand(transcriptData[["exon_features"]])),c("+", "-"), nomatch = 0) > 0]
 
 	#cuffDB_spliceR[["exon_features"]] <- cuffDB_spliceR[["exon_features"]][ match(strand(cuffDB_spliceR[["exon_features"]]),c("+", "-"))>0]
 
