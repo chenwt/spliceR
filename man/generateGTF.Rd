@@ -27,10 +27,9 @@ generateGTF(transcriptData, filters, expressionCutoff=0,scoreMethod="local", fil
 \author{Kristoffer Knudsen, Johannes Waage}
 
 \references{
-Anders, S, Huber, W (2010).
-Differential expression analysis for sequence count data
-\emph{Genome Biology} 11, R106.
+Vitting-Seerup K, Porse BT, Sandelin A, Waage JE. (2013) spliceR: An R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. \emph{PeerJ PrePrints} 1:e80v1
 }
+
 
 \examples{
 #Load cufflinks example data

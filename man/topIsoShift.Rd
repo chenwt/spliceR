@@ -23,10 +23,9 @@ A dataframe, containing a cast of the GRanges rows of the highest scoring transc
 \author{Kristoffer Knudsen, Johannes Waage}
 
 \references{
-Knudsen, K, Waage, J (2013).
-spliceR, an R-package for splice class and PTC annotation of RNA-seq data
-\emph{Journal} xx,xx
+Vitting-Seerup K, Porse BT, Sandelin A, Waage JE. (2013) spliceR: An R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. \emph{PeerJ PrePrints} 1:e80v1
 }
+
 
 \examples{
 #Load cufflinks example data
