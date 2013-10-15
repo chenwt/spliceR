@@ -143,9 +143,9 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50, filte
 				dnaSequencePre	<- paste(currentExonSeq	, collapse="")
 				dnaSequence 	<- DNAString(substr(dnaSequencePre ,cdsOffset, nchar(dnaSequencePre)))
 
-				# Break if any position has N 
-				if (length(grep("N", dnaSequence, perl=T))>0) next
-
+        		# Break if any position is different from AGTC
+        		if (length(grep('[^ATCG]', dnaSequence, perl=T))>0) next
+				
 				# Translate sequence
 				suppressWarnings(proteinSequence 	<- as.character(translate(dnaSequence)))
 				stopPos[i] 							<- regexpr("\\*", proteinSequence)[1]
@@ -165,9 +165,9 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50, filte
 				dnaSequencePre						<- paste(rev(currentExonSeq	), collapse="")
 				dnaSequence 						<- DNAString(substr(dnaSequencePre,cdsOffset-1, nchar(dnaSequencePre)))
 
-				# Break if any position has N 
-				if (length(grep("N", dnaSequence, perl=T))>0) next
-
+				# Break if any position is different from AGTC
+        		if (length(grep('[^ATCG]', dnaSequence, perl=T))>0) next
+				
 	 			suppressWarnings(proteinSequence 	<- as.character(translate(dnaSequence)))
 				stopPos[i] 							<- regexpr("\\*", proteinSequence)[1]
 				if (stopPos[i][1] == -1) stopPos[i]	<- nchar(proteinSequence)
