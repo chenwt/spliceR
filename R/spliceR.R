@@ -91,7 +91,7 @@ spliceR <- function(transcriptData, compareTo, filters, expressionCutoff=0, useP
 
 
 	#Convert Granges to dataframe
-	tempDF <- GenomicRanges::as.data.frame(transcriptData[["transcript_features"]], stringsAsFactors=F)
+	tempDF <- GenomicRanges::as.data.frame(transcriptData[["transcript_features"]])
 	tempDF <- data.frame(lapply(tempDF, function(x) {if (class(x)=="factor") as.character(x) else (x)}), stringsAsFactors=FALSE) # remove factors
 	colnames(tempDF) <- c(colnames(tempDF)[1:5], substr(colnames(tempDF)[6:ncol(tempDF)],9,nchar(colnames(tempDF)[6:ncol(tempDF)])))
 	#remove columns not needed here

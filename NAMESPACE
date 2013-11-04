@@ -1,3 +1,8 @@
+#imports
+import(plyr)
+import(RColorBrewer)
+import(VennDiagram)
+
 # Calling the dynamic library.
 useDynLib(spliceR)
 
@@ -7,10 +12,8 @@ exportPattern("^[^\\.]")
 exportClasses("SpliceRList")
 exportClasses("CDSSet")
 
-#import(cummeRbund)
-#import(VennDiagram)
-#import(RColorBrewer)
-#import(plyr)
+importMethodsFrom(IRanges, as.vector)
+importMethodsFrom(GenomicRanges, strand)
 
 # Overloading functions
 S3method(dim,SpliceRList)

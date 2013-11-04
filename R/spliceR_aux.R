@@ -352,8 +352,8 @@
   for(i in 1:(nrow(myExonInfoUniqSort)-1)) { # loop over the samples (except the last since that have already been compared with by the second loop)
     for(j in count:nrow(myExonInfoUniqSort)) { # loop over the samples starting from 2, since I dont want to compare an exon with itself
       # Check whether the two exons are overlapping
-      #if( .findOverlappingExons(exon1=myExonInfoUniqSort[i,], exon2=myExonInfoUniqSort[j,]) ) {
-      if( .C("findOverlappingExons", as.integer(myExonInfoUniqSort[i,c("start","end")]), as.integer(myExonInfoUniqSort[j,c("start","end")]), as.integer(0))[[3]] ) {
+      if( .findOverlappingExons(exon1=myExonInfoUniqSort[i,], exon2=myExonInfoUniqSort[j,]) ) {
+      #if( .C("findOverlappingExons", as.integer(myExonInfoUniqSort[i,c("start","end")]), as.integer(myExonInfoUniqSort[j,c("start","end")]), as.integer(0))[[3]] ) {
         #overlapIndexDF <- rbind(overlapIndexDF, data.frame(i,j))      
         overlapIndex <- rbind(overlapIndex, matrix(c(i,j),nrow=1))      
       }
@@ -387,8 +387,8 @@
       for(i in 1:(length(overlappingWith)-1)) { # loop over the samples (except the last since that have already been compared with by the second loop)
         for(j in count:length(overlappingWith)) { # loop over the samples to compare with      
           # Compare the two exons to find thos that are NOT overlapping
-          #if( ! .findOverlappingExons(exon1=myExonInfoUniqSort[overlappingWith[i],], exon2=myExonInfoUniqSort[overlappingWith[j],]) ) {  # it is faster to compare the two exons again thant to look for the indexes in the overlapping table
-          if(!.C("findOverlappingExons", as.integer(myExonInfoUniqSort[overlappingWith[i],c("start","end")]), as.integer(myExonInfoUniqSort[overlappingWith[j],c("start","end")]), as.integer(0))[[3]] ) {
+          if( ! .findOverlappingExons(exon1=myExonInfoUniqSort[overlappingWith[i],], exon2=myExonInfoUniqSort[overlappingWith[j],]) ) {  # it is faster to compare the two exons again thant to look for the indexes in the overlapping table
+          #if(!.C("findOverlappingExons", as.integer(myExonInfoUniqSort[overlappingWith[i],c("start","end")]), as.integer(myExonInfoUniqSort[overlappingWith[j],c("start","end")]), as.integer(0))[[3]] ) {
             # add it to the intron retension list
             intronRetensions <- c(intronRetensions, dublicatedExon )
           }
@@ -464,8 +464,8 @@
 #       } else 
       # C-FUNCTION
       # Test for overlapping exons
-      if(.C("findOverlappingExons", as.integer(transcript1[exonIndex1,c('start','end')]), as.integer(transcript2[exonIndex2,c('start','end')]), as.integer(0))[[3]]) {
-      #if(.findOverlappingExons(transcript1[exonIndex1,c('start','end')], transcript2[exonIndex2,c('start','end')])) {
+      #if(.C("findOverlappingExons", as.integer(transcript1[exonIndex1,c('start','end')]), as.integer(transcript2[exonIndex2,c('start','end')]), as.integer(0))[[3]]) {
+      if(.findOverlappingExons(transcript1[exonIndex1,c('start','end')], transcript2[exonIndex2,c('start','end')])) {
         overlappingExons <- rbind(overlappingExons, c(exonIndex1,exonIndex2))
       }
       # Determine which of the next exon have the lowest start coordinat so I know which one to go to (to make sure I dont skip exons)

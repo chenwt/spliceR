@@ -1,5 +1,7 @@
 annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50, filters, expressionCutoff=0)
 {
+	require("GenomicRanges")
+
 	if (!class(transcriptData)[1]=="SpliceRList") stop("transcriptData argument is not of class SpliceRList")
 	if (!class(genomeObject)[1]=="BSgenome") stop("genomeObject argument is not of class BSgenome")
 	if (!class(cds)[1]=="CDSSet") stop("cds argument is not of class CDSSet")
@@ -17,8 +19,8 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50, filte
 
 	#Get only + and minus strand
 	#transcriptData[["exon_features"]] <- transcriptData[["exon_features"]][match(strand(transcriptData[["exon_features"]]),c("+", "-"), nomatch=0)>0]
-	transcriptData[["exon_features"]] <- transcriptData[["exon_features"]][match(as.vector(GenomicRanges::strand(transcriptData[["exon_features"]])),c("+", "-"), nomatch = 0) > 0]
-
+	 transcriptData[["exon_features"]] <- transcriptData[["exon_features"]][match(as.vector(GenomicRanges::strand(transcriptData[["exon_features"]])),c("+", "-"), nomatch = 0) > 0]
+	#transcriptData[["exon_features"]][strand(transcriptData[["exon_features"]]) %in% c("+", "-")]
 	#cuffDB_spliceR[["exon_features"]] <- cuffDB_spliceR[["exon_features"]][ match(strand(cuffDB_spliceR[["exon_features"]]),c("+", "-"))>0]
 
 	# Correct chr names from Ensamble
