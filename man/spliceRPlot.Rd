@@ -1,6 +1,6 @@
 \name{spliceRPlot}
 \alias{spliceRPlot}
-\title{Plot stuff}
+\title{Plot venn diagrams of alternative splicing events}
 \description{Plot venn diagrams of alternative splicing events vs. samples.}
 \usage{
 spliceRPlot(spliceRobject, evaluate="nr_transcript", asType="All",colors=NULL, alpha=NULL, reset=FALSE, filters=NULL, expressionCutoff=0)

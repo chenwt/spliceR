@@ -57,7 +57,7 @@ totalNumberOfAS <- function(spliceRObject) {
     if(is.null(spliceRObject$transcripts_plot))
         stop("SpliceRList has not yet been analyzed using spliceRPlot, run spliceRPlot() first...")
 
-    return(colSums(spliceRObject$transcripts_plot[,c('ESI','MEE','MESI','ISI','A5','A3','ATSS','ATTS','All')]))
+    return(colSums(mySpliceRList$transcripts_plot$isoforms[,c('ESI','MEE','MESI','ISI','A5','A3','ATSS','ATTS','All')]))
 }
 
 preSpliceRFilter <- function(transcriptData, filters, expressionCutoff=0) {
@@ -110,6 +110,7 @@ preSpliceRFilter <- function(transcriptData, filters, expressionCutoff=0) {
 
     # remove unwanted in the exon GRange as well
     transcriptData$exon_features <- transcriptData$exon_features[which(transcriptData$exon_features$spliceR.isoform_id %in% transcriptData$transcript_features$spliceR.isoform_id)]
+    transcriptData$transcript_features <- transcriptData$transcript_features[which(transcriptData$transcript_features$spliceR.isoform_id %in% transcriptData$exon_features$spliceR.isoform_id)]
 
     transcriptData$filter_params <- filters
 

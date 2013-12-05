@@ -12,7 +12,7 @@ getCDS(selectedGenome, repoName)
   \item{repoName}{A character, giving the gene model repository. Currently supported are "ensemble", "UCSC" (knownGene), and "refseq".} 
  }
 \details{
-For other genomes and/or gene model repositories, please construct a \code{getCDS} directly (see \code{\link{CDSSet}}).
+For other genomes and/or gene model repositories, please construct a \code{CDSSet} directly (see \code{\link{CDSSet}}).
 
 For a full example of how to use \code{getCDS} in a workflow, please see \code{\link{annotatePTC}}.
 }

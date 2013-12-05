@@ -4,7 +4,7 @@
 
 void findIdenticalExons(int *exon1, int *exon2, int *identical)
 {
-	if ((exon1[0] == exon2[0]) & exon1[1] == exon2[1])
+	if ((exon1[0] == exon2[0]) & (exon1[1] == exon2[1]))
 		identical[0] = 1;
 	else
 		identical[0] = 0;
@@ -14,9 +14,9 @@ void findOverlappingExons(int *exon1, int *exon2, int *identical)
 {
 
 	identical[0] = 0;
-	if (exon1[0] <  exon2[1] & exon1[0] >= exon2[0]) identical[0] = 1;
-	if (exon1[1] <= exon2[1] & exon1[1] >  exon2[0]) identical[0] = 1;
-	if (exon1[0] <  exon2[0] & exon1[1] >  exon2[1]) identical[0] = 1;
+	if ((exon1[0] <  exon2[1]) & (exon1[0] >= exon2[0])) identical[0] = 1;
+	if ((exon1[1] <= exon2[1]) & (exon1[1] >  exon2[0])) identical[0] = 1;
+	if ((exon1[0] <  exon2[0]) & (exon1[1] >  exon2[1])) identical[0] = 1;
 
 }
 

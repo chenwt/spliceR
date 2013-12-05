@@ -8,11 +8,11 @@
   # numbers in a dummy venn diagram. By calculateing the region sizes myself (instead of just using venn.diagram with 
   # a list) I can weight each of the inputs for example by expression level or number of AS events (or the combination)
   
-  # This allows me to create highly costumized Venn plots. E.g number of AS evenst / nr_Transcripts
-  
+  # This allows me to create highly costumized Venn plots. E.g number of AS evenst / nr_Transcript
+    
   ### Manipulate the score dataframe to the use I need
   expressed <- scoreDataFrame[,c(3:(length(conditionsToAnalyze)+2))] > expressionCutoff
-  
+
   ########################### Function of how to ecaluate the numbers ##########################
   if(evaluate == 'nr_transcript') { # function to return number of transcripts
     evaluateFunction <- function(expressedTranscripts, scoreDataFrame, asType, index) {
@@ -147,7 +147,6 @@
     # Rearage to the order that the numbers are actually plotted
     vennData <- vennData[c(1,2,3,4,5,14,9,8,6,12,10,7,13,11,15,25,20,21,17,18,23,16,19,22,24,30,29,28,27,26,31 )]
   }
-  # should be returned as a vecor - but list are easier to debug
   return(vennData)
 }
 
@@ -248,7 +247,7 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='All', c
     }
     
     # Extract transcript_features from spliceRobject
-    transcript_features <- GenomicRanges::as.data.frame(spliceRobject[["transcript_features"]], stringsAsFactors=F)
+    transcript_features <- GenomicRanges::as.data.frame(spliceRobject[["transcript_features"]])
     transcript_features <- data.frame(lapply(transcript_features, function(x) {if (class(x)=="factor") as.character(x) else (x)}), stringsAsFactors=FALSE)
     colnames(transcript_features) <- c(colnames(transcript_features)[1:5], substr(colnames(transcript_features)[6:ncol(transcript_features)],9,nchar(colnames(transcript_features)[6:ncol(transcript_features)])))
     
@@ -289,7 +288,7 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='All', c
     }
     
     ### Extract a data.frame with transcript in rows and expression values from each condidition in seperat collumns
-    splittedIsoform <- split(analyzedIsoformData, f=analyzedIsoformData$isoform_id)
+    splittedIsoform <- split(analyzedIsoformData[,c('sample_1','sample_2','iso_value_1','iso_value_2')], f=analyzedIsoformData$isoform_id)
     myIsoformScore <- ldply(splittedIsoform, function(x) myExtractData(x))
     colnames(myIsoformScore) <- c('isoform_id',conditionsToAnalyze)
     
@@ -305,10 +304,26 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='All', c
     ### Rearange collumns
     myASisoformScores <- myASisoformScores[,c('isoform_id','gene_id',conditionsToAnalyze,'ESI','MEE','MESI','ISI','A5', 'A3','ATSS','ATTS','All')]
     
-    spliceRobject[['transcripts_plot']] <- myASisoformScores
+    ### Calculate gene expression
+    temp <- split(myASisoformScores, f=myASisoformScores$gene_id)
+    # function to use on the splitted data
+    getGeneExpression <- function(df) {
+        if(nrow(df) == 1 ) {
+            return(df)
+        } else {
+            for(i in 3:(3+length(conditionsToAnalyze)-1)) {
+                df[,i]      <- sum(df[,i])
+            }
+            return(df)
+        }
+    }
+    myGeneExpression <- ldply(temp, getGeneExpression)[,-1]
+    
+    spliceRobject[['transcripts_plot']] <- list(isoforms=myASisoformScores, genes=myGeneExpression)
   } # end of is.null(cummerSpliceRanalyzed[['plotData']])
   else {
-    myASisoformScores <- spliceRobject[['transcripts_plot']]
+    myASisoformScores <- spliceRobject$transcripts_plot$isoforms
+    myGeneExpression <- spliceRobject$transcripts_plot$genes
   }
   
 
@@ -317,40 +332,43 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='All', c
   
   if(evaluate == 'nr_transcript') {
     overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
-    subText <- 'Number of transcipts'
+    subText         <- 'Number of transcipts'
   } else if(evaluate == 'nr_genes' ) {
-    overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
-    subText <- 'Number of genes'
+    overwriteValues <- .getIntersectVennData(myGeneExpression, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
+    subText         <- 'Number of genes'
   } else if(evaluate == 'nr_transcript_pr_gene' ) {
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
-    nrGenes <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts   <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
+    nrGenes         <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(nrTranscripts/nrGenes,digits=2)
-    subText <- 'Number of transcript per gene'
+    subText         <- 'Number of transcript per gene'
   } else if(evaluate == 'nr_AS') {
     overwriteValues <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
-    subText <- paste('Number of',asType,'AS events',sep=' ')
+    subText         <- paste('Number of',asType,'AS events',sep=' ')
   } else if(evaluate == 'mean_AS_gene') {
-    nrAS <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
+    nrAS            <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts   <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(nrAS/nrTranscripts,digits=2)
-    subText <- paste('Average number of',asType,'AS events per gene',sep=' ')
+    subText         <- paste('Average number of',asType,'AS events per gene',sep=' ')
   } else if(evaluate == 'mean_AS_transcript') {
-    nrAS <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
+    nrAS            <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_AS', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts   <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(nrAS/nrTranscripts,digits=2)
-    subText <- paste('Average number of',asType,'AS events per transcript',sep=' ')
+    subText         <- paste('Average number of',asType,'AS events per transcript',sep=' ')
   } else if(evaluate == 'mean_transcript_exp') {
-    expressionMass <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='exp_mass', asType=asType, expressionCutoff=expressionCutoff)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
+    expressionMass  <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='exp_mass', asType=asType, expressionCutoff=expressionCutoff)
+    nrTranscripts   <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_transcript', asType=asType, expressionCutoff=expressionCutoff)
     overwriteValues <- round(expressionMass/nrTranscripts,digits=2)
-    subText <- 'Mean transcript expression'
+    subText         <- 'Mean transcript expression'
   } else if(evaluate == 'mean_gene_exp') {
-    expressionMass <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='exp_mass', asType=asType, expressionCutoff=expressionCutoff)
-    nrTranscripts <- .getIntersectVennData(myASisoformScores, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
-    overwriteValues <- round(expressionMass/nrTranscripts,digits=2)
+    expressionMass  <- .getIntersectVennData(myGeneExpression, conditionsToAnalyze , evaluate='exp_mass', asType=asType, expressionCutoff=expressionCutoff)
+    nrGenes         <- .getIntersectVennData(myGeneExpression, conditionsToAnalyze , evaluate='nr_genes', asType=asType, expressionCutoff=expressionCutoff)
+    overwriteValues <- round(expressionMass/nrGenes,digits=2)
     subText <- 'Mean gene expression'
   }
-
+  
+  # Correct for deviding with zero
+  overwriteValues[which(is.na(overwriteValues))] <- 0
+ 
   ### Create a dummy venn diagram
   if(length(conditionsToAnalyze) == 2) {
     if(is.null(colors)) {

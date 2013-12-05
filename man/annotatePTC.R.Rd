@@ -5,15 +5,13 @@
 PTC and NMD-sensitivity detection from assembled RNA-seq data.
 }
 \usage{
-annotatePTC(transcriptData, cds, genomeObject, PTCDistance=50, filters, expressionCutoff=0)
+annotatePTC(transcriptData, cds, genomeObject, PTCDistance=50)
 }
 \arguments{
   \item{transcriptData}{A \code{SpliceRList} object, containing transcript and exon information.} 
   \item{cds}{A \code{CDSSet} object, containing CDS information.} 
   \item{genomeObject}{A \code{BSgenome} object, containing sequence for the relevant genome. Contained in BSGenome objects, downloadable from BioConductor.} 
   \item{PTCDistance}{A numeric giving the premature termination codon-distance: The minimum distance from a STOP to the final exon-exon junction, for a transcript to be marked as NMD-sensitive.} 
-  \item{filters}{Character, giving the filters that should be applied - any combinations of 'geneOK', 'expressedGenes', 'sigGenes', 'isoOK', 'expressedIso', 'isoClass' and/or 'sigIso'. Works only for data from cufflinks, as a manually generated \code{SpliceRList} does not include these metacolumns.}
-  \item{expressionCutoff}{Numeric, giving the expression threshold (often in FPKM) used for the 'expressedGenes' and 'expressedIso' filter. Default value is 0.}
 
   }
 \details{

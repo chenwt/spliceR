@@ -1,5 +1,5 @@
 Package: spliceR
-Version: 1.1.1
+Version: 1.1.3
 Date: 2013/7/18
 Title: Classification of alternative splicing and prediction of coding potential from RNA-seq data.
 Author: Johannes Waage <johannes.waage@gmail.com>, Kristoffer Vitting-Seerup <k.vitting.seerup@gmail.com>
