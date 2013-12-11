@@ -20,7 +20,7 @@ spliceRPlot(spliceRobject, evaluate="nr_transcript", asType="All",colors=NULL, a
 \details{
 	Upon inital usage of spliceRPlot, the \code{SpliceRList} is initiated with internal data, allowing for faster replotting. If the \code{SpliceRList} changes because of filtering or other manipulation, rerun spliceRPlot with \code{reset=T}.
 	For the evaulate parameter, the following are valid:
-	'nr_transcript', 'nr_AS', 'mean_AS', 'mean_transcript_exp', 'mean_gene_exp'.
+	'nr_transcript','nr_genes', 'nr_transcript_pr_gene', 'nr_AS', 'mean_AS_gene', 'mean_AS_transcript', 'mean_transcript_exp',  'mean_gene_exp'.
   'nr_transcript' outputs number of transcripts, 'nr_AS' outputs number of alternative splicing events, 'mean_as' outputs the average number of AS events per gene, 'mean_transcript_exp' outputs the mean transcript expression and 'mean_gene_exp' output the mean gene expression.
 	For a detailed description of filters, see \code{\link{spliceR}}.
 }

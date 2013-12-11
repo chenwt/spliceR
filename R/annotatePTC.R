@@ -14,6 +14,9 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50)
 	#Get genomic sequence
 	message("Fetching exon sequence....", sep="")
 
+	#Establish exon features full copy
+	exon_features_full <- transcriptData[["exon_features"]]
+
 
 	#Get only + and - strands
 	#transcriptData[["exon_features"]] <- transcriptData[["exon_features"]][match(strand(transcriptData[["exon_features"]]),c("+", "-"), nomatch=0)>0]
@@ -241,6 +244,11 @@ annotatePTC <- function(transcriptData, cds, genomeObject, PTCDistance=50)
 	transcriptData[["transcript_features"]]$"spliceR.stopDistance" 		<- stopDistance
 	transcriptData[["transcript_features"]]$"spliceR.junctionIndex" 	<- junctionIndex
 	transcriptData[["transcript_features"]]$"spliceR.PTC"           	<-(stopDistance>=PTCDistance) & junctionIndex != 0
+
+	#restore full copy of exon features
+	
+	#Establish exon features full copy
+	transcriptData[["exon_features"]] <- exon_features_full
 
 	return(transcriptData)
 }

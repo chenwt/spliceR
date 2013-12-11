@@ -12,7 +12,7 @@ generateGTF(transcriptData, filters=NULL, expressionCutoff=0,scoreMethod="local"
   \item{filters}{Vector, giving the filters that should be applied - any combinations of 'geneOK', 'expressedGenes', 'sigGenes', 'isoOK', 'expressedIso', 'isoClass' and/or 'sigIso'. Works only for data from cufflinks.}
   \item{expressionCutoff}{Numeric, giving the expression threshold (often in FPKM) used for the 'expressedGenes' and 'expressedIso' filter. Default value is 0.}
   \item{scoreMethod}{Character, either of 'local" of 'global', indicating whether to score isoform expression values for GTF color coding based on expression of the isoform in relation to the sample (global) or the gene (local).}
-  \item{filePrefix}{Output file name prefix.}
+  \item{filePrefix}{Output file name prefix, including path.}
   \item{shortDescription}{A short description for the GTF track.}
   \item{longDescription}{A long description for the GTF track.}
   \item{useProgressBar}{Boolean, indicating whether to use progressbars. For compatibility. Default = TRUE.}

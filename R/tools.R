@@ -57,7 +57,7 @@ totalNumberOfAS <- function(spliceRObject) {
     if(is.null(spliceRObject$transcripts_plot))
         stop("SpliceRList has not yet been analyzed using spliceRPlot, run spliceRPlot() first...")
 
-    return(colSums(mySpliceRList$transcripts_plot$isoforms[,c('ESI','MEE','MESI','ISI','A5','A3','ATSS','ATTS','All')]))
+    return(colSums(spliceRObject$transcripts_plot$isoforms[, c("ESI", "MEE", "MESI", "ISI", "A5", "A3", "ATSS", "ATTS", "All")]))
 }
 
 preSpliceRFilter <- function(transcriptData, filters, expressionCutoff=0) {

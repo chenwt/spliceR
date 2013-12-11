@@ -255,22 +255,22 @@ spliceRPlot <- function(spliceRobject, evaluate='nr_transcript', asType='All', c
     isoformsToAnalyzeIndex <- 1:nrow(transcript_features)
     ##################################### Apply the chosen filters #####################################
     # Optional filters 
-    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterOKGenes(        list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterExpressedGenes( list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
-    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterSigGenes(       list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterOKIso(          list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterExpressedIso(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
-    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterIsoClassCode(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
-    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterSigIso(         list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }  
+    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- .filterOKGenes(        list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedGenes( list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
+    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- .filterSigGenes(       list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- .filterOKIso(          list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedIso(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex, expressionCutoff) }
+    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- .filterIsoClassCode(   list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }
+    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- .filterSigIso(         list("transcript_features"=transcript_features), isoformsToAnalyzeIndex) }  
     if('singleExon'     %in% filters) { 
       exonDF <- GenomicRanges::as.data.frame(spliceRobject[["exon_features"]])
       exonDF <- data.frame(lapply(exonDF, function(x) {if (class(x)=="factor") as.character(x) else (x)}), stringsAsFactors=FALSE) # remove factors
       colnames(exonDF) <- c(colnames(exonDF)[1:5], substr(colnames(exonDF)[6:ncol(exonDF)],9,nchar(colnames(exonDF)[6:ncol(exonDF)])))
       
-      isoformsToAnalyzeIndex <- spliceR:::.filterSingleExonIsoAll( list("transcript_features"=transcript_features, "exon_features"=exonDF), isoformsToAnalyzeIndex) 
+      isoformsToAnalyzeIndex <- .filterSingleExonIsoAll( list("transcript_features"=transcript_features, "exon_features"=exonDF), isoformsToAnalyzeIndex) 
       rm(exonDF)
     }
-    if('PTC'            %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterPTC(               list('transcript_features'=transcript_features), isoformsToAnalyzeIndex) }
+    if('PTC'            %in% filters) { isoformsToAnalyzeIndex <- .filterPTC(               list('transcript_features'=transcript_features), isoformsToAnalyzeIndex) }
     
     analyzedIsoformData <- transcript_features[isoformsToAnalyzeIndex,]
     

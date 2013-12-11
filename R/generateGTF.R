@@ -75,15 +75,15 @@ generateGTF <- function(transcriptData, filters=NULL,expressionCutoff=0, scoreMe
     isoformsToAnalyzeIndex <- 1:nrow(transcriptData[["transcript_features"]])
 
     # Apply the chosen filters
-    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterOKGenes(        transcriptData, isoformsToAnalyzeIndex) }
-    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterExpressedGenes( transcriptData, isoformsToAnalyzeIndex, expressionCutoff) }
-    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterSigGenes(       transcriptData, isoformsToAnalyzeIndex) }
-    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterOKIso(          transcriptData, isoformsToAnalyzeIndex) }
-    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterExpressedIso(   transcriptData, isoformsToAnalyzeIndex, expressionCutoff) }
-    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterIsoClassCode(   transcriptData, isoformsToAnalyzeIndex) }
-    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterSigIso(         transcriptData, isoformsToAnalyzeIndex) }  
-    if('singleExon'     %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterSingleExonIsoAll( transcriptData, isoformsToAnalyzeIndex) }
-    if('PTC'            %in% filters) { isoformsToAnalyzeIndex <- spliceR:::.filterPTC(               transcriptData, isoformsToAnalyzeIndex) }
+    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- .filterOKGenes(        transcriptData, isoformsToAnalyzeIndex) }
+    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedGenes( transcriptData, isoformsToAnalyzeIndex, expressionCutoff) }
+    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- .filterSigGenes(       transcriptData, isoformsToAnalyzeIndex) }
+    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- .filterOKIso(          transcriptData, isoformsToAnalyzeIndex) }
+    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedIso(   transcriptData, isoformsToAnalyzeIndex, expressionCutoff) }
+    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- .filterIsoClassCode(   transcriptData, isoformsToAnalyzeIndex) }
+    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- .filterSigIso(         transcriptData, isoformsToAnalyzeIndex) }  
+    if('singleExon'     %in% filters) { isoformsToAnalyzeIndex <- .filterSingleExonIsoAll( transcriptData, isoformsToAnalyzeIndex) }
+    if('PTC'            %in% filters) { isoformsToAnalyzeIndex <- .filterPTC(               transcriptData, isoformsToAnalyzeIndex) }
   
     message(length(unique(transcriptData[["transcript_features"]]$isoform_id[isoformsToAnalyzeIndex])), " isoforms post-filtering...")
 

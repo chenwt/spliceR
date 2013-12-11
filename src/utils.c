@@ -32,7 +32,7 @@ void determineLeftOverlappingAStype(int *exon1, int *exon2, int *isStrandEqualTo
 		{
 			if ( isExonIndexEqualTo11[0] | isExonIndexEqualTo11[1] )
 			{
-				exit;
+				return;
 			} 
 			else {
 				asTypes[1] = 1;
@@ -44,7 +44,7 @@ void determineLeftOverlappingAStype(int *exon1, int *exon2, int *isStrandEqualTo
 		{
 			if ( isExonIndexEqualTo11[0] | isExonIndexEqualTo11[1] )
 			{
-				exit;
+				return;
 			} 
 			else {
 				asTypes[0] = 1;
@@ -65,7 +65,7 @@ void determineRightOverlappingAStype(int *exon1, int *exon2, int *isStrandEqualT
 		{
 			if ( isExonIndexEqualToEnd[0] | isExonIndexEqualToEnd[1] )
 			{
-				exit;
+				return;
 			} 
 			else {
 				asTypes[0] = 1;
@@ -77,7 +77,7 @@ void determineRightOverlappingAStype(int *exon1, int *exon2, int *isStrandEqualT
 		{
 			if ( isExonIndexEqualToEnd[0] | isExonIndexEqualToEnd[1] )
 			{
-				exit;
+				return;
 			} 
 			else {
 				asTypes[1] = 1;
