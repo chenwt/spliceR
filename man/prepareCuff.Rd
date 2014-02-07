@@ -5,11 +5,12 @@
 Prepare assembled RNA-seq data from Cufflinks for spliceR.
 }
 \usage{
-prepareCuff(cuffDB, fixCufflinksAnnotationProblem=T)
+prepareCuff(cuffDB, fixCufflinksAnnotationProblem=T,removeNonChanonicalChr=T)
 }
 \arguments{
   \item{cuffDB}{a \code{cuffDB} object, produced by cummeRbund. This object must have been generated with cummeRbund, using the \code{gtf} parameter (see example), for spliceR to extract transcript model and exon information.}
   \item{fixCufflinksAnnotationProblem}{Fixes problems with Cufflinks gene symbol annotation. Please see the vignette for additional information.}
+  \item{removeNonChanonicalChr}{Flag to remove chromosomes with non-canonical names.}  
 }
 
 \details{
