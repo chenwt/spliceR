@@ -1,13 +1,18 @@
 Package: spliceR
-Version: 1.3.0
+Version: 1.3.1
 Date: 2013/12/11
-Title: Classification of alternative splicing and prediction of coding potential from RNA-seq data.
-Author: Johannes Waage <johannes.waage@gmail.com>, Kristoffer Vitting-Seerup <k.vitting.seerup@gmail.com>
-Maintainer: Johannes Waage <johannes.waage@gmail.com>, Kristoffer Vitting-Seerup <k.vitting.seerup@gmail.com>
-Imports: GenomicRanges, IRanges 
-Depends: R (>= 2.15.0), methods, cummeRbund, rtracklayer, VennDiagram, RColorBrewer, plyr
+Title: Classification of alternative splicing and prediction of coding
+        potential from RNA-seq data.
+Author: Johannes Waage <johannes.waage@gmail.com>, Kristoffer
+        Vitting-Seerup <k.vitting.seerup@gmail.com>
+Maintainer: Johannes Waage <johannes.waage@gmail.com>, Kristoffer
+        Vitting-Seerup <k.vitting.seerup@gmail.com>
+Imports: GenomicRanges, IRanges
+Depends: R (>= 2.15.0), methods, cummeRbund, rtracklayer, VennDiagram,
+        RColorBrewer, plyr
 Suggests: BSgenome.Hsapiens.UCSC.hg19, BSgenome
-biocViews: Bioinformatics, DifferentialExpression, HighThroughputSequencing, HighThroughputSequencingData, RNAseq, RNAseqData, software, visualization
-Description: An R package for classification of alternative splicing and prediction of coding potential from RNA-seq data.
+Description: An R package for classification of alternative splicing
+        and prediction of coding potential from RNA-seq data.
 License: GPL (>=2)
-
+biocViews: DifferentialExpression, Sequencing, Sequencing, RNASeq,
+        RNAseqData, software, Visualization
