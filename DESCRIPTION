@@ -1,5 +1,5 @@
 Package: spliceR
-Version: 1.3.1
+Version: 1.3.2
 Date: 2013/12/11
 Title: Classification of alternative splicing and prediction of coding
         potential from RNA-seq data.
@@ -14,5 +14,5 @@ Suggests: BSgenome.Hsapiens.UCSC.hg19, BSgenome
 Description: An R package for classification of alternative splicing
         and prediction of coding potential from RNA-seq data.
 License: GPL (>=2)
-biocViews: DifferentialExpression, Sequencing, Sequencing, RNASeq,
+biocViews: DifferentialExpression, Sequencing, RNASeq,
         RNAseqData, software, Visualization
