@@ -26,7 +26,7 @@ A \code{SpliceRList} with transcripts after filtering.
 \author{Kristoffer Knudsen, Johannes Waage}
 
 \references{
-Vitting-Seerup K, Porse BT, Sandelin A, Waage JE. (2013) spliceR: An R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. \emph{PeerJ PrePrints} 1:e80v1
+Vitting-Seerup K , Porse BT, Sandelin A, Waage J. (2014) spliceR: an R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. BMC Bioinformatics 15:81.
 }
 
 
