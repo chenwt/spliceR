@@ -1,0 +1,11 @@
+citHeader("To cite spliceR:")
+
+citEntry(
+	entry="article",
+	title="spliceR: an R package for classification of alternative splicing and prediction of coding potential from RNA-seq data",
+	author="Kristoffer Vitting-Seerup, Bo Torben Porse, Albin Sandelin and Johannes Waage",
+	journal="BMC Bioinformatics",
+	volume=15,
+	pages=81,
+	year=2014,
+	textVersion="Vitting-Seerup K, Porse BT, Sandelin A and Waage J (2014). spliceR: an R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. BMC Bioinformatics 15:81")
