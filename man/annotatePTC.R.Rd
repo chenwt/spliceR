@@ -21,14 +21,28 @@ If the STOP distance to the final exon-exon junction is larger than the threshol
 
 \value{
 A \code{SpliceRList}, with the \code{transcript_features} object containing additional columns:
-\code{spliceR.cds_pos}, the nucleotide position (in genomic coordinates) of the start of the most upstream open reading frame.
-\code{spliceR.stop_pos}, the nucleotide position (in mRNA coordinates) of the end (first STOP codon position) of the most upstream open reading frame.
-\code{spliceR.stop_distance}, the distance in nt (in mRNA coordinates) from the stop position to the end of the transcript.
-\code{spliceR.junction_index}, the index of exon in which the stop codon falls, where 0 is the last exon of the transcript, -1 is the second-last, etc; NA, if \code{annotatePTC} was not able to find a ORF.
-\code{spliceR.PTC}, a boolean, indicating whether the transcript is (theoretically) susceptible to nonsense mediated decay. annotatePTC sets this value to TRUE if the stop codon falls if any exon other than the last, and the distance to the final downstream exon-exon junction is larger than \code{PTCDistance}.
+
+\code{spliceR.cdsPosGenomic}, the genomic position of the used START codon.
+
+\code{spliceR.stopPosGenomic}, the genomic position of the identified STOP codon,
+
+\code{spliceR.ExonWithStart}, the exon which the used START codon falls within,
+
+\code{spliceR.ExonWithStop}, the exon which the STOP codon falls within.
+
+\code{spliceR.cdsPosTranscipt}, the position relative to transcript start where the used START codon is (measured in nucleotides).
+
+\code{spliceR.stopPosTranscipt}, the position relative to transcript start where the found STOP codon is (measured in nucleotides).
+
+\code{spliceR.stopDistance}, the distance from the found STOP codon to the last exon-exon junction, realative to transcript start.
+
+\code{spliceR.junctionIndex}, the exon number in which the found STOP codon falls when compared to the last exon-exon junction, where 0 is the last exon of the transcript, -1 is the second-last, etc NA, if annotatePTC was not able to find a ORF.
+
+\code{spliceR.PTC}, a boolean, indicating whether the transcript is (theoretically) susceptible to nonsense mediated decay. annotatePTC sets this value to TRUE if the stop codon falls if any exon other than the last, and the distance to the final downstream exon-exon junction is larger than PTCDistance (default 50 nt).
+
 }
 
-\author{Kristoffer Knudsen, Johannes Waage}
+\author{Kristoffer Vitting-Seerup, Johannes Waage}
 
 \references{
 Vitting-Seerup K , Porse BT, Sandelin A, Waage J. (2014) spliceR: an R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. BMC Bioinformatics 15:81.

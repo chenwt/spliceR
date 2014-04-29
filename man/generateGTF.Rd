@@ -24,7 +24,7 @@ generateGTF(transcriptData, filters=NULL, expressionCutoff=0,scoreMethod="local"
 	Transcripts will be colored on a grayscale according to the \code{scoreMethod} parameter; for "local", the isoform most expressed for a given gene symbol will be darkest; for "global", the color coding will be relative to each transcripts expression across the sample.
 }
 
-\author{Kristoffer Knudsen, Johannes Waage}
+\author{Kristoffer Vitting-Seerup, Johannes Waage}
 
 \references{
 Vitting-Seerup K, Porse BT, Sandelin A, Waage JE. (2013) spliceR: An R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. \emph{PeerJ PrePrints} 1:e80v1

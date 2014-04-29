@@ -20,7 +20,7 @@ These helper functions returns either the "transcript_features" or "exon_feature
 A \code{GRanges} object. See \code{SpliceRList} for a full description of the contents of a SpliceRList.
 }
 
-\author{Kristoffer Knudsen, Johannes Waage}
+\author{Kristoffer Vitting-Seerup, Johannes Waage}
 
 \references{
 Vitting-Seerup K , Porse BT, Sandelin A, Waage J. (2014) spliceR: an R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. BMC Bioinformatics 15:81.

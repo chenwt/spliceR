@@ -20,7 +20,7 @@ If the data is based on cufflinks (source_id=="cufflinks"), only isoforms flagge
 A dataframe, containing a cast of the GRanges rows of the highest scoring transcripts by dIF.
 }
 
-\author{Kristoffer Knudsen, Johannes Waage}
+\author{Kristoffer Vitting-Seerup, Johannes Waage}
 
 \references{
 Vitting-Seerup K , Porse BT, Sandelin A, Waage J. (2014) spliceR: an R package for classification of alternative splicing and prediction of coding potential from RNA-seq data. BMC Bioinformatics 15:81.
