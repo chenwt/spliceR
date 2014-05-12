@@ -182,10 +182,10 @@ Given here is an example of a prefiltering step, using standard filters. For mor
 NB: Note that \texttt{preSpliceRFilter()} reports the number of total pairwise comparison, while \texttt{spliceR()} reports the total number of unique isoforms.
 
 <<preSpliceRFilter>>=>
-cuffDB_spliceR_filtered <- preSpliceRFilter(
-	cuffDB_spliceR,
-	filters=c("expressedIso", "isoOK", "expressedGenes", "geneOK")
-	)
+#cuffDB_spliceR_filtered <- preSpliceRFilter(
+#	cuffDB_spliceR,
+#	filters=c("expressedIso", "isoOK", "expressedGenes", "geneOK")
+#	)
 @
 
 \section{SpliceR}
