@@ -14,4 +14,4 @@ Suggests: BSgenome.Hsapiens.UCSC.hg19, BSgenome
 Description: An R package for classification of alternative splicing
         and prediction of coding potential from RNA-seq data.
 License: GPL (>=2)
-biocViews: DifferentialExpression, Sequencing, RNASeq, Visualization
+biocViews: GeneExpression, Transcription, AlternativeSplicing, DifferentialExpression, DifferentialSplicing, Sequencing, Visualization
