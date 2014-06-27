@@ -1,4 +1,4 @@
-prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=T)
+prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=TRUE, removeNonCanonical=TRUE)
 {
     if(!is.logical(fixCufflinksAnnotationProblem)) { stop("The fixCufflinksAnnotationProblem parameter must be set to either TRUE or FALSE, indicating whether to try to correct the Cufflinks annotation problem") }
     ### Get isoform and gene info
@@ -8,8 +8,10 @@ prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=T)
 	cuffGenes 			<- genes(cuffDB)
 	cuffIsoforms 		<- isoforms(cuffDB)
 	
-	# Get isoform annotation
-	isoformAnnotation 			<- data.frame(annotation(cuffIsoforms),stringsAsFactors=F)[,-10]
+	### Get isoform annotation
+	isoformAnnotation 			<- data.frame(annotation(cuffIsoforms),stringsAsFactors=F)
+	# Unique + removeal of colums is nessesary of the new cummeRbund devel (where these colums are included making duplication of rows)
+    isoformAnnotation          	<- unique( isoformAnnotation[,-which( colnames(isoformAnnotation) %in% c('start','end','width','exon_number'))])
     
     # Get gene diff analysis
 	geneDiffanalysis 			<- data.frame(diffData(cuffGenes),stringsAsFactors=F)[,-8]
@@ -23,19 +25,22 @@ prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=T)
 	colnames(isoformDiffanalysis) 	<- c('isoform_id','sample_1', 'sample_2' ,unlist(lapply(colnames(isoformDiffanalysis[,-1:-3]), function(x) paste("iso_",x,sep="")))) # add gene to the colnames so they can be destinquished from the gene diff data
 	isoformData 					<- data.frame(merge(isoformData, isoformDiffanalysis, by=c('isoform_id','sample_1','sample_2')), stringsAsFactors=F) #CORR JW 
     
-	# Get exon info
-	message("Reading cuffDB, exons...")
+    ### Get exon info
+    message("Reading cuffDB, exons...")
     isoformFeatureQuery		<-paste("SELECT y.* FROM features y JOIN genes x on y.gene_id = x.gene_id ",sep="")
-	isoformFeatures			<-data.frame(dbGetQuery(cuffDB@DB,isoformFeatureQuery),stringsAsFactors=F)
+    isoformFeatures			<-data.frame(dbGetQuery(cuffDB@DB,isoformFeatureQuery),stringsAsFactors=F)
+    # Another faster way of doing it would be to use the colums removed from isoformAnnotation, but this approach is not backwards compatible
+    # isoformFeatures <- isoformAnnotation[,c("seqnames", "start", "end", "strand", "isoform_id", "gene_id")]
 	
 	### Remove unknown chromosomes
-	isoformData <- isoformData[grep('^[1-9mc]', isoformData$locus, ignore.case=T, perl=T),] # only that those that starts with either a number or c or m (meaning random ect are removed - they cause problems in annotatePTC)
-	isoformFeatures <- isoformFeatures[grep('^[1-9mc]', isoformFeatures$seqnames, ignore.case=T, perl=T),] # only that those that starts with either a number or c or m (meaning random ect are removed - they cause problems in annotatePTC)
+    if( removeNonCanonical ) {
+    	isoformData <- isoformData[grep('^[1-9mc]', isoformData$locus, ignore.case=T, perl=T),] # only that those that starts with either a number or c or m (meaning random ect are removed - they cause problems in annotatePTC)
+    	isoformFeatures <- isoformFeatures[grep('^[1-9mc]', isoformFeatures$seqnames, ignore.case=T, perl=T),] # only that those that starts with either a number or c or m (meaning random ect are removed - they cause problems in annotatePTC)
+    }
 	
 	### Make sure none of the data.frames only contain isoforms not found in the other data.frame
 	isoformData <- isoformData[which(isoformData$isoform_id %in% isoformFeatures$isoform_id),]
 	isoformFeatures <- isoformFeatures[which(isoformFeatures$isoform_id %in% isoformData$isoform_id),]
-	
     
 	### Fix to correct for Cufflinks annotation problem where cufflinks assignes transcripts from several annotated genes to 1 cuffgene (this solution does not correct for gene expression or differential analysis)
     if(fixCufflinksAnnotationProblem) {
@@ -101,7 +106,6 @@ prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=T)
 	)
 
 	# Create GRanges for exon features
-	isoformFeatures <- isoformFeatures[,c("seqnames", "start", "end", "strand", "isoform_id", "gene_id")]
 	exonFeatures <- GRanges(
 		seqnames=isoformFeatures$"seqnames",
 		strand=isoformFeatures$"strand",
