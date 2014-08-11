@@ -2,6 +2,12 @@
 \title{spliceR news}
 \encoding{UTF-8}
 
+\section{Version 1.6.0}{\itemize{
+\item
+Bug fixes.}
+}
+
+
 \section{Version 1.4.1}{\itemize{
 \item
 Many improvements and bug fixes.}

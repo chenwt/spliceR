@@ -60,62 +60,63 @@ totalNumberOfAS <- function(spliceRObject) {
     return(colSums(spliceRObject$transcripts_plot$isoforms[, c("ESI", "MEE", "MESI", "ISI", "A5", "A3", "ATSS", "ATTS", "All")]))
 }
 
-preSpliceRFilter <- function(transcriptData, filters, expressionCutoff=0) {
+preSpliceRFilter <- function(spliceRobject, filters, expressionCutoff=0) {
     # Check class and GRanges
-    if (!class(transcriptData)[1]=="SpliceRList") stop("transcriptData argument is not of class SpliceRList")
-    if ( class(transcriptData$"transcript_features") != "GRanges" || class(transcriptData$"exon_features") != "GRanges" ) stop("transcriptData must have GRanges objects in slots 'transcript_features' and 'exon_features'") 
-
+    if (!class(spliceRobject)[1]=="SpliceRList") stop("spliceRobject argument is not of class SpliceRList")
+    if ( class(spliceRobject$"transcript_features") != "GRanges" || class(spliceRobject$"exon_features") != "GRanges" ) stop("spliceRobject must have GRanges objects in slots 'transcript_features' and 'exon_features'") 
+    
     # Validate required columns in spliceRList
-    t_colNames <- colnames(mcols(transcriptData$"transcript_features"))
+    t_colNames <- colnames(mcols(spliceRobject$"transcript_features"))
     if(!all(c("isoform_id", "sample_1", "sample_2", "gene_id", "iso_value_1", "iso_value_2", "iso_q_value") %in% substr(t_colNames, 9, nchar(t_colNames))))
         stop("Transcript features GRanges not compatible with spliceR - see documentation for more details")
-
-    e_colNames <- colnames(mcols(transcriptData$"exon_features"))
+    
+    e_colNames <- colnames(mcols(spliceRobject$"exon_features"))
     if(!all(c("isoform_id","gene_id") %in% substr(e_colNames, 9, nchar(e_colNames))))
         stop("Exon features GRanges not compatible with spliceR - see documentation for more details")
-
-    dataOrigin <- transcriptData[["source_id"]]
-
+    
+    dataOrigin <- spliceRobject[["source_id"]]
+    
     if(! dataOrigin %in% c('cufflinks', 'granges')  ) {
         stop('The input data was not recogniced, please see ?SpliceRList for more information about the input files')
     }
-
+    
     if(any(!filters %in% c('geneOK','expressedGenes','sigGenes','isoOK','expressedIso','isoClass','sigIso'))) { # if one or more of the supplied filters are not recogniced
         stop('One or more of the supplied filters are not recogniced, please see ?preSpliceRfilter for more information about the filters')
     }
-
-    message(length(transcriptData$transcript_features$spliceR.isoform_id), " entries pre-filtering...")
-
+    
+    message(length(spliceRobject$transcript_features$spliceR.isoform_id), " entries pre-filtering...")
+    
     # Rename the GRange object (without converting it to data.frame)
-    temp <- colnames(mcols(transcriptData$transcript_features))
+    temp <- colnames(mcols(spliceRobject$transcript_features))
     temp2 <- substr(temp,9,nchar(temp))
-    colnames(mcols(transcriptData$transcript_features)) <- temp2
-
-    isoformsToAnalyzeIndex <- 1:length(transcriptData$transcript_features$isoform_id)
-
+    temp2[which(temp2 %in% c("seqnames", "ranges", "strand", "seqlevels", "seqlengths", "isCircular", "start", "end", "width", "element"))] <- paste('_',temp2[which(temp2 %in% c("seqnames", "ranges", "strand", "seqlevels", "seqlengths", "isCircular", "start", "end", "width", "element"))], sep='') # nessesary because of name duplications
+    colnames(mcols(spliceRobject$transcript_features)) <- temp2
+    
+    isoformsToAnalyzeIndex <- 1:length(spliceRobject$transcript_features$isoform_id)
+    
     # Optional filters 
-    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- .filterOKGenes(           transcriptData, isoformsToAnalyzeIndex) }
-    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedGenes(    transcriptData, isoformsToAnalyzeIndex, expressionCutoff) }
-    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- .filterSigGenes(          transcriptData, isoformsToAnalyzeIndex) }
-    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- .filterOKIso(             transcriptData, isoformsToAnalyzeIndex) }
-    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedIso(      transcriptData, isoformsToAnalyzeIndex, expressionCutoff) }
-    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- .filterIsoClassCode(      transcriptData, isoformsToAnalyzeIndex) }
-    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- .filterSigIso(            transcriptData, isoformsToAnalyzeIndex) }  
-
+    if('geneOK'         %in% filters) { isoformsToAnalyzeIndex <- .filterOKGenes(           spliceRobject, isoformsToAnalyzeIndex) }
+    if('expressedGenes' %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedGenes(    spliceRobject, isoformsToAnalyzeIndex, expressionCutoff) }
+    if('sigGenes'       %in% filters) { isoformsToAnalyzeIndex <- .filterSigGenes(          spliceRobject, isoformsToAnalyzeIndex) }
+    if('isoOK'          %in% filters) { isoformsToAnalyzeIndex <- .filterOKIso(             spliceRobject, isoformsToAnalyzeIndex) }
+    if('expressedIso'   %in% filters) { isoformsToAnalyzeIndex <- .filterExpressedIso(      spliceRobject, isoformsToAnalyzeIndex, expressionCutoff) }
+    if('isoClass'       %in% filters) { isoformsToAnalyzeIndex <- .filterIsoClassCode(      spliceRobject, isoformsToAnalyzeIndex) }
+    if('sigIso'         %in% filters) { isoformsToAnalyzeIndex <- .filterSigIso(            spliceRobject, isoformsToAnalyzeIndex) }  
+    
     # use the index to reduce the number of lines
-    transcriptData$transcript_features <- transcriptData$transcript_features[isoformsToAnalyzeIndex,]
+    spliceRobject$transcript_features <- spliceRobject$transcript_features[isoformsToAnalyzeIndex,]
     # Add original colnames
-    colnames(mcols(transcriptData$transcript_features)) <- temp
-    message(length(transcriptData$transcript_features$spliceR.isoform_id), " entries post-filtering...")
-
+    colnames(mcols(spliceRobject$transcript_features)) <- temp
+    message(length(spliceRobject$transcript_features$spliceR.isoform_id), " entries post-filtering...")
+    
     # remove unwanted in the exon GRange as well
-    transcriptData$exon_features <- transcriptData$exon_features[which(transcriptData$exon_features$spliceR.isoform_id %in% transcriptData$transcript_features$spliceR.isoform_id)]
-    transcriptData$transcript_features <- transcriptData$transcript_features[which(transcriptData$transcript_features$spliceR.isoform_id %in% transcriptData$exon_features$spliceR.isoform_id)]
-
-    transcriptData$filter_params <- filters
-
+    spliceRobject$exon_features <- spliceRobject$exon_features[which(spliceRobject$exon_features$spliceR.isoform_id %in% spliceRobject$transcript_features$spliceR.isoform_id)]
+    spliceRobject$transcript_features <- spliceRobject$transcript_features[which(spliceRobject$transcript_features$spliceR.isoform_id %in% spliceRobject$exon_features$spliceR.isoform_id)]
+    
+    spliceRobject$filter_params <- filters
+    
     # return object
-    return(transcriptData)
+    return(spliceRobject)
 }
 
 prepareCuffExample <- function()

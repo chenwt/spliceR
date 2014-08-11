@@ -1,4 +1,4 @@
-prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=TRUE, removeNonCanonical=TRUE)
+prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=TRUE, removeNonChanonicalChr=TRUE)
 {
     if(!is.logical(fixCufflinksAnnotationProblem)) { stop("The fixCufflinksAnnotationProblem parameter must be set to either TRUE or FALSE, indicating whether to try to correct the Cufflinks annotation problem") }
     ### Get isoform and gene info
@@ -11,7 +11,7 @@ prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=TRUE, removeNonCan
 	### Get isoform annotation
 	isoformAnnotation 			<- data.frame(annotation(cuffIsoforms),stringsAsFactors=F)
 	# Unique + removeal of colums is nessesary of the new cummeRbund devel (where these colums are included making duplication of rows)
-    isoformAnnotation          	<- unique( isoformAnnotation[,-which( colnames(isoformAnnotation) %in% c('start','end','width','exon_number'))])
+    isoformAnnotation          	<- unique( isoformAnnotation[,which(! colnames(isoformAnnotation) %in% c('start','end','width','exon_number','class_code.1','gene_id.1','TSS_group_id.1','CDS_id.1'))])
     
     # Get gene diff analysis
 	geneDiffanalysis 			<- data.frame(diffData(cuffGenes),stringsAsFactors=F)[,-8]
@@ -33,7 +33,7 @@ prepareCuff <- function(cuffDB, fixCufflinksAnnotationProblem=TRUE, removeNonCan
     # isoformFeatures <- isoformAnnotation[,c("seqnames", "start", "end", "strand", "isoform_id", "gene_id")]
 	
 	### Remove unknown chromosomes
-    if( removeNonCanonical ) {
+    if( removeNonChanonicalChr ) {
     	isoformData <- isoformData[grep('^[1-9mc]', isoformData$locus, ignore.case=T, perl=T),] # only that those that starts with either a number or c or m (meaning random ect are removed - they cause problems in annotatePTC)
     	isoformFeatures <- isoformFeatures[grep('^[1-9mc]', isoformFeatures$seqnames, ignore.case=T, perl=T),] # only that those that starts with either a number or c or m (meaning random ect are removed - they cause problems in annotatePTC)
     }
