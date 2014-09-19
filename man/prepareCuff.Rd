@@ -5,7 +5,7 @@
 Prepare assembled RNA-seq data from Cufflinks for spliceR.
 }
 \usage{
-prepareCuff(cuffDB, fixCufflinksAnnotationProblem=T,removeNonChanonicalChr=TRUE)
+prepareCuff(cuffDB, fixCufflinksAnnotationProblem=TRUE,removeNonChanonicalChr=TRUE)
 }
 \arguments{
   \item{cuffDB}{a \code{cuffDB} object, produced by cummeRbund. This object must have been generated with cummeRbund, using the \code{gtf} parameter (see example), for spliceR to extract transcript model and exon information.}
@@ -14,6 +14,7 @@ prepareCuff(cuffDB, fixCufflinksAnnotationProblem=T,removeNonChanonicalChr=TRUE)
 }
 
 \details{
+	NB: prepareCuff is optimized to work with the cummeRbund vs v2.7.2 or later. Please check your version, and update if appropriate.
 	Use \code{prepareCuff} to prepare a cummeRbund/Cufflinks DB object for use by spliceR (see example).
 	Often, it's appropriate to prefilter cufflinks data after running prepareCuff with \code{\link{preSpliceRFilter}} to reduce overhead on downstream analyses.
 }
