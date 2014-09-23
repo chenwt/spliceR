@@ -5,10 +5,10 @@
 Applies a number of filters on a spliceR object to reduce data set size before running downstream analyses.
 }
 \usage{
-preSpliceRFilter(transcriptData, filters, expressionCutoff=0)
+preSpliceRFilter(spliceRobject, filters, expressionCutoff=0)
 }
 \arguments{
-  \item{transcriptData}{a \code{SpliceRList} object, either created manually from transcript and exon information (see \code{\link{SpliceRList}}), or created by \code{\link{prepareCuff}} from CuffLinks data.}
+  \item{spliceRobject}{a \code{SpliceRList} object, either created manually from transcript and exon information (see \code{\link{SpliceRList}}), or created by \code{\link{prepareCuff}} from CuffLinks data.}
   \item{filters}{vector, giving the filters that should be applied - any combinations of 'geneOK', 'expressedGenes', 'sigGenes', 'isoOK', 'expressedIso', 'isoClass' and/or 'sigIso'. Works only for data from cufflinks, as a manually generated \code{SpliceRList} does not include these metacolumns.}
   \item{expressionCutoff}{Numeric, giving the expression threshold (often in FPKM) used for the 'expressedGenes' and 'expressedIso' filter. Default value is 0.}
 }
