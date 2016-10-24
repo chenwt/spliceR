@@ -20,7 +20,7 @@ getCDS <- function(selectedGenome, repoName)
 		"ensemble", "UCSC", "refseq", "GENCODE") %in% repoName)]
 
 	# Get CDS
-	session      		<- browserSession("UCSC")
+	session      		<- browserSession("UCSC",url="http://genome-euro.ucsc.edu/cgi-bin/")
 	genome(session)   	<- selectedGenome
 	query         		<- ucscTableQuery(session, repoName)
 	
