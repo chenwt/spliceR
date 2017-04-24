@@ -1,0 +1,21 @@
+#imports
+import(plyr)
+import(RColorBrewer)
+import(VennDiagram)
+
+# Calling the dynamic library.
+useDynLib(spliceR)
+
+# All functions exported other than those starting with "."
+exportPattern("^[^\\.]")
+
+exportClasses("SpliceRList")
+exportClasses("CDSSet")
+
+importMethodsFrom(IRanges, as.vector)
+importMethodsFrom(GenomicRanges, strand)
+
+# Overloading functions
+S3method(dim,SpliceRList)
+S3method(length,SpliceRList)
+#S3method(as.matrix,DGEList)
